@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Person extends Model
 {
@@ -24,4 +24,20 @@ class Person extends Model
         'research_interests',
         'status',
     ];
+
+    public function researchProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ResearchProject::class,
+            'research_project_people'
+        )->withPivot('role');
+    }
+
+    public function publications(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Publication::class,
+            'publication_people'
+        )->withPivot('author_order');
+    }
 }
