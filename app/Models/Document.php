@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Document extends Model
 {
@@ -18,4 +19,9 @@ class Document extends Model
         'document_type',
         'visibility',
     ];
+
+    public function researchProject(): BelongsTo
+    {
+        return $this->belongsTo(ResearchProject::class);
+    }
 }
