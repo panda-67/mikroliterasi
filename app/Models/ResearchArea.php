@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ResearchArea extends Model
 {
@@ -15,4 +16,12 @@ class ResearchArea extends Model
         'slug',
         'description',
     ];
+
+    public function researchProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ResearchProject::class,
+            'research_project_research_area'
+        );
+    }
 }
