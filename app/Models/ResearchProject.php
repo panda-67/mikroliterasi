@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Storage;
 
 class ResearchProject extends Model
 {
@@ -34,6 +36,17 @@ class ResearchProject extends Model
             'start_date' => 'date',
             'end_date' => 'date',
         ];
+    }
+
+    protected function featuredImageUrl(): Attribute
+    {
+        return Attribute::get(
+            fn() => $this->featured_image
+                ? Storage::disk('public')->url(
+                    $this->featured_image
+                )
+                : null
+        );
     }
 
     public function creator(): BelongsTo
