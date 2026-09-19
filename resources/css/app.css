@@ -4,6 +4,272 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /*
+    |--------------------------------------------------------------------------
+    | Typography
+    |--------------------------------------------------------------------------
+    */
+
+    --font-sans:
+        'Source Sans 3',
+        ui-sans-serif,
+        system-ui,
+        sans-serif,
+        'Apple Color Emoji',
+        'Segoe UI Emoji',
+        'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Colors
+    |--------------------------------------------------------------------------
+    */
+
+    /* Base */
+    --color-background: #f7f8f6;
+    --color-surface: #ffffff;
+
+    /* Text */
+    --color-text: #1f2933;
+    --color-text-muted: #667085;
+    --color-text-subtle: #98a2b3;
+
+    /* Border */
+    --color-border: #d9dee3;
+    --color-border-strong: #c4cbd2;
+
+    /* Brand */
+    --color-primary: #285943;
+    --color-primary-hover: #1f4735;
+    --color-primary-light: #e8f0eb;
+
+    /* Accent */
+    --color-accent: #b68a3a;
+    --color-accent-light: #f5eddd;
+
+    /* Semantic */
+    --color-success: #2e7d32;
+    --color-success-light: #e8f5e9;
+
+    --color-warning: #ed6c02;
+    --color-warning-light: #fff3e0;
+
+    --color-error: #d32f2f;
+    --color-error-light: #ffebee;
+
+    --color-info: #1976d2;
+    --color-info-light: #e3f2fd;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Border Radius
+    |--------------------------------------------------------------------------
+    */
+
+    --radius-sm: 3px;
+    --radius-md: 5px;
+    --radius-lg: 8px;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Shadows
+    |--------------------------------------------------------------------------
+    */
+
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.08);
+    --shadow-md: 0 4px 12px rgb(0 0 0 / 0.10);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Layout
+    |--------------------------------------------------------------------------
+    */
+
+    --width-content: 1200px;
+    --width-content-narrow: 820px;
+    --width-content-wide: 1400px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Base
+|--------------------------------------------------------------------------
+*/
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        color: var(--color-text);
+        background-color: var(--color-background);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        min-height: 100vh;
+        margin: 0;
+        background-color: var(--color-background);
+        color: var(--color-text);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Headings
+    |--------------------------------------------------------------------------
+    */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 0;
+        color: var(--color-text);
+        font-weight: 600;
+        line-height: 1.25;
+    }
+
+    h1 {
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        letter-spacing: -0.015em;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
+
+    h4 {
+        font-size: 1.125rem;
+    }
+
+    h5,
+    h6 {
+        font-size: 1rem;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Text
+    |--------------------------------------------------------------------------
+    */
+
+    p {
+        margin: 0;
+    }
+
+    small {
+        font-size: 0.875rem;
+    }
+
+    strong,
+    b {
+        font-weight: 600;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Links
+    |--------------------------------------------------------------------------
+    */
+
+    a {
+        color: var(--color-primary);
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: var(--color-primary-hover);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Images
+    |--------------------------------------------------------------------------
+    */
+
+    img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Form Controls
+    |--------------------------------------------------------------------------
+    */
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    input:disabled,
+    select:disabled,
+    textarea:disabled {
+        cursor: not-allowed;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Focus
+    |--------------------------------------------------------------------------
+    */
+
+    :focus-visible {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Selection
+    |--------------------------------------------------------------------------
+    */
+
+    ::selection {
+        background-color: var(--color-primary-light);
+        color: var(--color-text);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Horizontal Rule
+    |--------------------------------------------------------------------------
+    */
+
+    hr {
+        margin: 0;
+        border: 0;
+        border-top: 1px solid var(--color-border);
+    }
 }
