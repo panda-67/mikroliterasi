@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\ResearchProject;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
 class ResearchProjectService
@@ -19,11 +19,11 @@ class ResearchProjectService
         return ResearchProject::where('slug', $slug)->first();
     }
 
-    public function getAll(): Collection
+    public function getAll(int $length): LengthAwarePaginator
     {
         return ResearchProject::query()
             ->latest()
-            ->get();
+            ->paginate($length);
     }
 
     public function create(array $data): ResearchProject

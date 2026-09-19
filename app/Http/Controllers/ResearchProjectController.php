@@ -5,16 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\ResearchProject;
 use App\Services\ResearchProjectService;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ResearchProjectController extends Controller
+class ResearchProjectController extends Controller implements HasMiddleware
 {
     public function __construct(
         protected ResearchProjectService $projectService
     ) {}
 
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(
+                'auth',
+                only: [
+                    'create',
+                    'store',
+                    'edit',
+                    'update',
+                    'destroy',
+                ]
+            ),
+        ];
+    }
+
     public function index()
     {
-        $projects = $this->projectService->getAll();
+        $projects = $this->projectService->getAll(12);
 
         return view('research-projects.index', compact('projects'));
     }
