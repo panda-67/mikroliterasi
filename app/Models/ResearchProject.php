@@ -49,6 +49,11 @@ class ResearchProject extends Model
         );
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
