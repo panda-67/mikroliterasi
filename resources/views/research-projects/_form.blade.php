@@ -14,34 +14,10 @@
             id="title"
             name="title"
             value="{{ old('title', $project->title ?? '') }}"
-            required
             class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         >
 
         @error('title')
-            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
-        @enderror
-    </div>
-
-    {{-- Slug --}}
-    <div>
-        <label
-            for="slug"
-            class="mb-2 block text-sm font-medium text-text"
-        >
-            Slug
-        </label>
-
-        <input
-            type="text"
-            id="slug"
-            name="slug"
-            value="{{ old('slug', $project->slug ?? '') }}"
-            required
-            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        >
-
-        @error('slug')
             <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
         @enderror
     </div>
@@ -100,7 +76,6 @@
         <select
             id="status"
             name="status"
-            required
             class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
         >
             @foreach ([

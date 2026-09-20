@@ -6,6 +6,7 @@ use App\Models\ResearchProject;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ResearchProjectService
 {
@@ -28,6 +29,8 @@ class ResearchProjectService
 
     public function create(array $data): ResearchProject
     {
+        $data['slug'] = $this->generateUniqueSlug($data['title']);
+
         return ResearchProject::create($data);
     }
 
@@ -102,5 +105,19 @@ class ResearchProjectService
         array $publications
     ): void {
         $project->publications()->sync($publications);
+    }
+
+    private function generateUniqueSlug(string $title): string
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (ResearchProject::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

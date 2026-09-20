@@ -48,7 +48,6 @@ class ResearchProjectController extends Controller implements HasMiddleware
     {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:research_projects,slug'],
             'short_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'status' => [
@@ -82,12 +81,6 @@ class ResearchProjectController extends Controller implements HasMiddleware
     ) {
         $data = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:research_projects,slug,' . $researchProject->id,
-            ],
             'short_description' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'status' => [
