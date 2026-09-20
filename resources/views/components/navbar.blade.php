@@ -12,12 +12,12 @@
         {{-- Desktop navigation --}}
         <nav class="hidden items-center gap-1 md:flex">
 
-            <a
+            <x-nav-link
                 href="{{ route('research-projects.index') }}"
-                class="rounded-md px-3 py-2 text-sm font-medium text-text-muted transition hover:bg-background hover:text-primary"
+                :active="request()->routeIs('research-projects.*')"
             >
                 Research
-            </a>
+            </x-nav-link>
 
             <a
                 href="#"
@@ -33,12 +33,12 @@
                 People
             </a>
 
-            <a
-                href="#"
-                class="rounded-md px-3 py-2 text-sm font-medium text-text-muted transition hover:bg-background hover:text-primary"
+            <x-nav-link
+                href="{{ route('about') }}"
+                :active="request()->routeIs('about')"
             >
                 About
-            </a>
+            </x-nav-link>
 
             @auth
                 <form
@@ -98,12 +98,12 @@
     >
         <nav class="mx-auto w-full max-w-300 px-4 py-3 sm:px-6">
 
-            <a
+            <x-mobile-nav-link
                 href="{{ route('research-projects.index') }}"
-                class="block rounded-md px-3 py-3 text-sm font-medium text-text-muted hover:bg-background hover:text-primary"
+                :active="request()->routeIs('research-projects.*')"
             >
                 Research
-            </a>
+            </x-mobile-nav-link>
 
             <a
                 href="#"
@@ -119,12 +119,12 @@
                 People
             </a>
 
-            <a
-                href="#"
-                class="block rounded-md px-3 py-3 text-sm font-medium text-text-muted hover:bg-background hover:text-primary"
+            <x-mobile-nav-link
+                href="{{ route('about') }}"
+                :active="request()->routeIs('about')"
             >
                 About
-            </a>
+            </x-mobile-nav-link>
 
             @auth
                 <form
