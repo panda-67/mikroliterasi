@@ -29,7 +29,11 @@
     @include('components.navbar')
 
     <main class="flex-1">
+
+        <x-flash-message />
+
         @yield('content')
+
     </main>
 
     @include('components.footer')

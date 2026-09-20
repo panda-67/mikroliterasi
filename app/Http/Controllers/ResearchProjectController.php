@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResearchProjectRequest;
 use App\Models\ResearchProject;
 use App\Services\ResearchProjectService;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -44,23 +44,11 @@ class ResearchProjectController extends Controller implements HasMiddleware
         return view('research-projects.create');
     }
 
-    public function store(Request $request)
+    public function store(ResearchProjectRequest $request)
     {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'short_description' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
-            'status' => [
-                'required',
-                'in:planned,ongoing,completed,archived',
-            ],
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'funding_source' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        $project = $this->projectService->create($data);
+        $project = $this->projectService->create(
+            $request->validated()
+        );
 
         return redirect()
             ->route('research-projects.show', $project->slug)
@@ -75,27 +63,11 @@ class ResearchProjectController extends Controller implements HasMiddleware
         );
     }
 
-    public function update(
-        Request $request,
-        ResearchProject $researchProject
-    ) {
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'short_description' => ['nullable', 'string'],
-            'description' => ['nullable', 'string'],
-            'status' => [
-                'required',
-                'in:planned,ongoing,completed,archived',
-            ],
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'funding_source' => ['nullable', 'string', 'max:255'],
-        ]);
-
+    public function update(ResearchProjectRequest $request, ResearchProject $researchProject)
+    {
         $project = $this->projectService->update(
             $researchProject,
-            $data
+            $request->validated()
         );
 
         return redirect()
