@@ -10,7 +10,7 @@
 
     {{-- Header --}}
     <section class="border-b border-border">
-        <div class="mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+        <div class="mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
 
             {{-- Breadcrumb --}}
             <nav class="text-sm text-text-muted" aria-label="Breadcrumb">
@@ -46,6 +46,35 @@
                     {{ $project->short_description }}
                 </p>
             @endif
+
+            @auth
+                <div class="mt-6 flex flex-wrap items-center gap-3">
+
+                    <a
+                        href="{{ route('research-projects.edit', $project) }}"
+                        class="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+                    >
+                        Edit Project
+                    </a>
+
+                    <form
+                        action="{{ route('research-projects.destroy', $project) }}"
+                        method="POST"
+                        onsubmit="return confirm('Delete this research project?');"
+                    >
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                            type="submit"
+                            class="rounded-md border border-error px-4 py-2 text-sm font-medium text-error hover:bg-error-light"
+                        >
+                            Delete Project
+                        </button>
+                    </form>
+
+                </div>
+            @endauth
 
         </div>
     </section>

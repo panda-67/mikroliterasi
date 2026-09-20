@@ -6,20 +6,29 @@
 
     {{-- Page header --}}
     <section class="border-b border-border">
-        <div class="mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+        <div class="flex flex-col gap-4 mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
 
             <p class="text-sm font-medium uppercase tracking-wide text-primary">
                 Research
             </p>
 
-            <h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
                 Research Projects
             </h1>
 
-            <p class="mt-4 max-w-2xl text-base leading-7 text-text-muted">
+            <p class="max-w-2xl text-base leading-7 text-text-muted">
                 Research projects covering biodiversity, conservation,
                 environmental science, and related field studies.
             </p>
+
+            @auth
+                <a
+                    href="{{ route('research-projects.create') }}"
+                    class="inline-flex w-max items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+                >
+                    Create Project
+                </a>
+            @endauth
 
         </div>
     </section>

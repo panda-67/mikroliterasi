@@ -40,6 +40,29 @@
                 About
             </a>
 
+            @auth
+                <form
+                    method="POST"
+                    action="{{ route('logout') }}"
+                >
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="text-sm font-medium text-text-muted hover:text-primary"
+                    >
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a
+                    href="{{ route('login') }}"
+                    class="text-sm font-medium text-text-muted hover:text-primary"
+                >
+                    Login
+                </a>
+            @endauth
+
         </nav>
 
         {{-- Mobile menu button --}}
@@ -102,6 +125,29 @@
             >
                 About
             </a>
+
+            @auth
+                <form
+                    method="POST"
+                    action="{{ route('logout') }}"
+                >
+                    @csrf
+
+                    <button
+                        type="submit"
+                        class="w-full py-3 px-3 text-left text-sm font-medium text-text-muted hover:text-primary"
+                    >
+                        Logout
+                    </button>
+                </form>
+            @else
+                <a
+                    href="{{ route('login') }}"
+                    class="block px-3 py-3 text-sm font-medium text-text-muted hover:text-primary"
+                >
+                    Login
+                </a>
+            @endauth
 
         </nav>
     </div>
