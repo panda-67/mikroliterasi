@@ -30,7 +30,7 @@
                     </a>
 
                     <a
-                        href="{{ url('/about') }}"
+                        href="{{ route('about') }}"
                         class="inline-flex items-center justify-center rounded-md border border-border-strong bg-surface px-5 py-2.5 text-sm font-medium text-text hover:border-primary hover:text-primary"
                     >
                         About Mikroliterasi
