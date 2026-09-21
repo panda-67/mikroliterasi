@@ -29,16 +29,34 @@ class ResearchProjectService
 
     public function create(array $data): ResearchProject
     {
+        $file = $data['featured_image'] ?? null;
+
+        unset($data['featured_image']);
+
         $data['slug'] = $this->generateUniqueSlug($data['title']);
 
-        return ResearchProject::create($data);
+        $project = ResearchProject::create($data);
+
+        if ($file) {
+            $this->setFeaturedImage($project, $file);
+        }
+
+        return $project->refresh();
     }
 
     public function update(
         ResearchProject $project,
         array $data
     ): ResearchProject {
+        $file = $data['featured_image'] ?? null;
+
+        unset($data['featured_image']);
+
         $project->update($data);
+
+        if ($file) {
+            $this->setFeaturedImage($project, $file);
+        }
 
         return $project->refresh();
     }

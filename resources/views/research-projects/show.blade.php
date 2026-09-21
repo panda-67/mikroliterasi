@@ -94,14 +94,19 @@
                     {{-- Featured image --}}
                     @if ($project->featured_image_url)
                         <figure class="overflow-hidden rounded-lg border border-border bg-surface">
-                            <img
-                                src="{{ $project->featured_image_url }}"
-                                alt="{{ $project->title }}"
-                                class="w-full object-cover"
-                            >
+                            <div class="aspect-video">
+                                <img
+                                    src="{{ $project->featured_image_url }}"
+                                    alt="{{ $project->title }}"
+                                    class="h-full w-full object-cover"
+                                >
+                            </div>
+
+                            <figcaption class="border-t border-border px-4 py-3 text-xs text-text-muted">
+                                Featured image — {{ $project->title }}
+                            </figcaption>
                         </figure>
                     @endif
-
 
                     {{-- Description --}}
                     @if ($project->description)

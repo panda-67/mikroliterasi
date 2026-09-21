@@ -22,6 +22,66 @@
         @enderror
     </div>
 
+    @if (isset($project) && $project->featured_image_url)
+        <div class="mb-4 flex flex-col gap-4">
+            <p class="text-sm font-medium text-text">
+                Current Featured Image
+            </p>
+
+            <div class="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
+                <div class="aspect-video">
+                    <img
+                        src="{{ $project->featured_image_url }}"
+                        alt="{{ $project->title }}"
+                        class="h-full w-full object-cover"
+                    >
+                </div>
+            </div>
+
+            <form
+                action="{{ route('research-projects.featured-image.destroy', $project) }}"
+                method="POST"
+                class="mt-3"
+            >
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    class="rounded-md border border-error px-3 py-2 text-sm font-medium text-error hover:bg-error-light"
+                >
+                    Remove Featured Image
+                </button>
+            </form>
+        </div>
+    @endif
+
+    {{-- Featured Image --}}
+    <div>
+        <label
+            for="featured_image"
+            class="block text-sm font-medium text-text"
+        >
+            Featured Image
+        </label>
+
+        <input
+            type="file"
+            id="featured_image"
+            name="featured_image"
+            accept=".jpg,.jpeg,.png,.webp"
+            class="mt-1.5 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text file:mr-4 file:rounded-md file:border-0 file:bg-surface file:px-3 file:py-2 file:text-sm file:font-medium file:text-text hover:file:bg-surface-hover"
+        >
+
+        <p class="mt-1.5 text-xs text-text-muted">
+            JPG, JPEG, PNG, atau WebP. Maksimal 5 MB.
+        </p>
+
+        @error('featured_image')
+            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
+        @enderror
+    </div>
+
     {{-- Short Description --}}
     <div>
         <label

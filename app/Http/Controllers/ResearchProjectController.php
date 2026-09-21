@@ -23,6 +23,7 @@ class ResearchProjectController extends Controller implements HasMiddleware
                 'edit',
                 'update',
                 'destroy',
+                'removeFeaturedImage',
             ]),
         ];
     }
@@ -82,5 +83,14 @@ class ResearchProjectController extends Controller implements HasMiddleware
         return redirect()
             ->route('research-projects.index')
             ->with('success', 'Research project berhasil dihapus.');
+    }
+
+    public function removeFeaturedImage(ResearchProject $researchProject)
+    {
+        $this->projectService->removeFeaturedImage($researchProject);
+
+        return redirect()
+            ->route('research-projects.edit', $researchProject)
+            ->with('success', 'Featured image berhasil dihapus.');
     }
 }

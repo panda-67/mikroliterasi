@@ -15,3 +15,8 @@ Route::resource(
     'research-projects',
     ResearchProjectController::class
 );
+
+Route::delete(
+    '/research-projects/{researchProject}/featured-image',
+    [ResearchProjectController::class, 'removeFeaturedImage']
+)->name('research-projects.featured-image.destroy');

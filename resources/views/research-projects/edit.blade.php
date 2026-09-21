@@ -28,6 +28,7 @@
     <form
         action="{{ route('research-projects.update', $project) }}"
         method="POST"
+        enctype="multipart/form-data"
         class="rounded-lg border border-border bg-surface p-5 sm:p-6"
     >
         @csrf

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\ResearchProject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ResearchProjectTest extends TestCase
@@ -220,5 +222,90 @@ class ResearchProjectTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseCount('research_projects', 0);
+    }
+
+    public function test_authenticated_user_can_upload_featured_image(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $image = UploadedFile::fake()->image('featured.jpg');
+
+        $response = $this->actingAs($user)->post(
+            route('research-projects.store'),
+            [
+                'title' => 'Elephant Corridor Research',
+                'status' => 'ongoing',
+                'featured_image' => $image,
+            ]
+        );
+
+        $project = ResearchProject::first();
+
+        $response->assertRedirect(
+            route('research-projects.show', $project->slug)
+        );
+
+        $this->assertNotNull($project->featured_image);
+
+        Storage::disk('public')->assertExists(
+            $project->featured_image
+        );
+    }
+
+    public function test_updating_featured_image_replaces_old_image(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $oldImage = UploadedFile::fake()->image('old.jpg');
+
+        $project = ResearchProject::factory()->create([
+            'title' => 'Elephant Corridor Research',
+            'featured_image' => null,
+        ]);
+
+        $oldPath = $oldImage->store(
+            'research-projects/featured',
+            'public'
+        );
+
+        $project->update([
+            'featured_image' => $oldPath,
+        ]);
+
+        Storage::disk('public')->assertExists($oldPath);
+
+        $newImage = UploadedFile::fake()->image('new.jpg');
+
+        $response = $this->actingAs($user)->put(
+            route('research-projects.update', $project),
+            [
+                'title' => $project->title,
+                'status' => $project->status,
+                'featured_image' => $newImage,
+            ]
+        );
+
+        $project->refresh();
+
+        $response->assertRedirect(
+            route('research-projects.show', $project->slug)
+        );
+
+        Storage::disk('public')->assertMissing($oldPath);
+
+        $this->assertNotNull($project->featured_image);
+
+        Storage::disk('public')->assertExists(
+            $project->featured_image
+        );
+
+        $this->assertNotSame(
+            $oldPath,
+            $project->featured_image
+        );
     }
 }

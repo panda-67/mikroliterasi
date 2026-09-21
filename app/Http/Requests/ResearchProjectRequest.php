@@ -20,6 +20,13 @@ class ResearchProjectRequest extends FormRequest
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'location' => ['nullable', 'string', 'max:255'],
             'funding_source' => ['nullable', 'string', 'max:255'],
+
+            'featured_image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:5120',
+            ],
         ];
     }
 }
