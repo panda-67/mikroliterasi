@@ -28,7 +28,7 @@
                 Current Featured Image
             </p>
 
-            <div class="mt-2 overflow-hidden rounded-lg border border-border bg-surface">
+            <div class="overflow-hidden rounded-lg border border-border bg-surface">
                 <div class="aspect-video">
                     <img
                         src="{{ $project->featured_image_url }}"
@@ -38,22 +38,16 @@
                 </div>
             </div>
 
-            <form
-                action="{{ route('research-projects.featured-image.destroy', $project) }}"
-                method="POST"
-                class="mt-3"
-            >
-                @csrf
-                @method('DELETE')
-
+            <div>
                 <button
-                    type="submit"
+                    type="button"
+                    id="remove-featured-image-button"
                     class="rounded-md border border-error px-3 py-2 text-sm font-medium text-error hover:bg-error-light"
                 >
                     Remove Featured Image
                 </button>
-            </form>
-        </div>
+            </div>
+       </div>
     @endif
 
     {{-- Featured Image --}}

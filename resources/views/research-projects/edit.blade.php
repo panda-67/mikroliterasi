@@ -57,4 +57,29 @@
 
 </div>
 
+@if (isset($project) && $project->featured_image_url)
+    <form
+        id="remove-featured-image-form"
+        action="{{ route('research-projects.featured-image.destroy', $project) }}"
+        method="POST"
+        class="hidden"
+    >
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <script>
+        const removeFeaturedImageButton = document.getElementById(
+            'remove-featured-image-button'
+        );
+
+        const removeFeaturedImageForm = document.getElementById(
+            'remove-featured-image-form'
+        );
+
+        removeFeaturedImageButton?.addEventListener('click', () => {
+            removeFeaturedImageForm?.submit();
+        });
+    </script>
+@endif
 @endsection
