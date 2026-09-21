@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Research Projects')
+@section('title', config('app.name', 'Mikroliterasi') . ' | Research Projects')
 
 @section('content')
 

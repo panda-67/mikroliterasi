@@ -36,7 +36,7 @@
             @endif
 
             {{-- Title --}}
-            <h1 class="mt-2 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
+            <h1 class="mt-2 max-w-4xl text-3xl font-semibold leading-16 tracking-tight sm:text-4xl lg:text-5xl">
                 {{ $project->title }}
             </h1>
 
@@ -47,6 +47,7 @@
                 </p>
             @endif
 
+            {{-- Action --}}
             @auth
                 <div class="mt-6 flex flex-wrap items-center gap-3">
 
@@ -60,13 +61,14 @@
                     <form
                         action="{{ route('research-projects.destroy', $project) }}"
                         method="POST"
-                        onsubmit="return confirm('Delete this research project?');"
+                        id="delete-project-form"
                     >
                         @csrf
                         @method('DELETE')
 
                         <button
-                            type="submit"
+                            type="button"
+                            id="delete-project-button"
                             class="rounded-md border border-error px-4 py-2 text-sm font-medium text-error hover:bg-error-light"
                         >
                             Delete Project
@@ -208,4 +210,92 @@
         </div>
     </section>
 
+    @auth
+        <div
+            id="delete-project-modal"
+            class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-project-title"
+        >
+            <div
+                class="w-full max-w-md rounded-lg border border-border bg-background p-6 shadow-lg"
+            >
+                <h2
+                    id="delete-project-title"
+                    class="text-lg font-semibold text-text"
+                >
+                    Delete Research Project
+                </h2>
+
+                <p class="mt-3 text-sm leading-6 text-text-muted">
+                    Are you sure you want to delete
+                    <span class="font-medium text-text">
+                        {{ $project->title }}
+                    </span>?
+                </p>
+
+                <p class="mt-2 text-sm leading-6 text-text-muted">
+                    This action cannot be undone.
+                </p>
+
+                <div class="mt-6 flex justify-end gap-3">
+                    <button
+                        type="button"
+                        id="cancel-delete"
+                        class="rounded-md border border-border px-4 py-2 text-sm font-medium text-text hover:bg-surface"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        id="confirm-delete"
+                        class="rounded-md bg-error px-4 py-2 text-sm font-medium text-white hover:bg-error/90"
+                    >
+                        Delete Project
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endauth
+    @auth
+        <script>
+            const deleteButton = document.getElementById('delete-project-button');
+            const deleteModal = document.getElementById('delete-project-modal');
+            const cancelDelete = document.getElementById('cancel-delete');
+            const confirmDelete = document.getElementById('confirm-delete');
+            const deleteForm = document.getElementById('delete-project-form');
+
+            deleteButton?.addEventListener('click', () => {
+                deleteModal.classList.remove('hidden');
+                deleteModal.classList.add('flex');
+            });
+
+            cancelDelete?.addEventListener('click', () => {
+                closeDeleteModal();
+            });
+
+            confirmDelete?.addEventListener('click', () => {
+                deleteForm.submit();
+            });
+
+            deleteModal?.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    closeDeleteModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeDeleteModal();
+                }
+            });
+
+            function closeDeleteModal() {
+                deleteModal.classList.remove('flex');
+                deleteModal.classList.add('hidden');
+            }
+        </script>
+    @endauth
 @endsection
