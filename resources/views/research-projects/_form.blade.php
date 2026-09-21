@@ -22,6 +22,7 @@
         @enderror
     </div>
 
+    {{--Current Featured Image--}}
     @if (isset($project) && $project->featured_image_url)
         <div class="mb-4 flex flex-col gap-4">
             <p class="text-sm font-medium text-text">
