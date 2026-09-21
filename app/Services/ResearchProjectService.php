@@ -108,7 +108,15 @@ class ResearchProjectService
         ResearchProject $project,
         array $people
     ): void {
-        $project->people()->sync($people);
+        $syncData = [];
+
+        foreach ($people as $person) {
+            $syncData[$person['person_id']] = [
+                'role' => $person['role'] ?? null,
+            ];
+        }
+
+        $project->people()->sync($syncData);
     }
 
     public function syncResearchAreas(

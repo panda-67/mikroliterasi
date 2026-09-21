@@ -22,6 +22,174 @@
         @enderror
     </div>
 
+    {{-- Research Team --}}
+    <div class="space-y-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-sm font-semibold text-text">
+                    Research Team
+                </h2>
+
+                <p class="mt-1 text-xs text-text-muted">
+                    Assign researchers and define their roles in this project.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="add-person"
+                class="rounded-md border border-border px-3 py-2 text-xs font-medium text-text transition hover:bg-surface"
+            >
+                + Add Person
+            </button>
+        </div>
+
+        <div
+            id="people-container"
+            class="space-y-3"
+        >
+            @php
+                $selectedPeople = old('people');
+
+                if ($selectedPeople === null) {
+                    $selectedPeople = isset($project)
+                        ? $project->people->map(fn ($person) => [
+                            'person_id' => $person->id,
+                            'role' => $person->pivot->role,
+                        ])->values()->toArray()
+                        : [];
+                }
+
+                if (empty($selectedPeople)) {
+                    $selectedPeople = [
+                        [
+                            'person_id' => '',
+                            'role' => '',
+                        ],
+                    ];
+                }
+            @endphp
+
+            @foreach ($selectedPeople as $index => $selectedPerson)
+                <div class="person-row grid gap-3 rounded-lg border border-border p-4 md:grid-cols-[1fr_1fr_auto]">
+                    <div>
+                        <label
+                            for="person-{{ $index }}"
+                            class="mb-1 block text-xs font-medium text-text"
+                        >
+                            Person
+                        </label>
+
+                        <select
+                            id="person-{{ $index }}"
+                            name="people[{{ $index }}][person_id]"
+                            class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text"
+                        >
+                            <option value="">Select person</option>
+
+                            @foreach ($people as $person)
+                                <option
+                                    value="{{ $person->id }}"
+                                    @selected((string) ($selectedPerson['person_id'] ?? '') === (string) $person->id)
+                                >
+                                    {{ $person->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error("people.$index.person_id")
+                            <p class="mt-1 text-xs text-red-600">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label
+                            for="person-role-{{ $index }}"
+                            class="mb-1 block text-xs font-medium text-text"
+                        >
+                            Role
+                        </label>
+
+                        <input
+                            type="text"
+                            id="person-role-{{ $index }}"
+                            name="people[{{ $index }}][role]"
+                            value="{{ $selectedPerson['role'] ?? '' }}"
+                            placeholder="e.g. Principal Investigator"
+                            class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text"
+                        >
+
+                        @error("people.$index.role")
+                            <p class="mt-1 text-xs text-red-600">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <div class="flex items-end">
+                        <button
+                            type="button"
+                            class="remove-person w-full rounded-md border border-border px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-surface md:w-auto"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <template id="person-row-template">
+            <div class="person-row grid gap-3 rounded-lg border border-border p-4 md:grid-cols-[1fr_1fr_auto]">
+                <div>
+                    <label
+                        class="mb-1 block text-xs font-medium text-text"
+                    >
+                        Person
+                    </label>
+
+                    <select
+                        name="people[__INDEX__][person_id]"
+                        class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text"
+                    >
+                        <option value="">Select person</option>
+
+                        @foreach ($people as $person)
+                            <option value="{{ $person->id }}">
+                                {{ $person->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label
+                        class="mb-1 block text-xs font-medium text-text"
+                    >
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        name="people[__INDEX__][role]"
+                        placeholder="e.g. Researcher"
+                        class="w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text"
+                    >
+                </div>
+
+                <div class="flex items-end">
+                    <button
+                        type="button"
+                        class="remove-person w-full rounded-md border border-border px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-surface md:w-auto"
+                    >
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </template>
+    </div>
+
     {{--Current Featured Image--}}
     @if (isset($project) && $project->featured_image_url)
         <div class="mb-4 flex flex-col gap-4">
@@ -247,3 +415,45 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('people-container');
+        const addButton = document.getElementById('add-person');
+        const template = document.getElementById('person-row-template');
+
+        let index = container.querySelectorAll('.person-row').length;
+
+        addButton.addEventListener('click', () => {
+            const html = template.innerHTML.replaceAll(
+                '__INDEX__',
+                index
+            );
+
+            container.insertAdjacentHTML('beforeend', html);
+
+            index++;
+        });
+
+        container.addEventListener('click', (event) => {
+            const button = event.target.closest('.remove-person');
+
+            if (!button) {
+                return;
+            }
+
+            const rows = container.querySelectorAll('.person-row');
+
+            if (rows.length === 1) {
+                const row = button.closest('.person-row');
+
+                row.querySelector('select').value = '';
+                row.querySelector('input').value = '';
+
+                return;
+            }
+
+            button.closest('.person-row').remove();
+        });
+    });
+</script>

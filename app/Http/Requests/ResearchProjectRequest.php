@@ -27,6 +27,19 @@ class ResearchProjectRequest extends FormRequest
                 'mimes:jpg,jpeg,png,webp',
                 'max:5120',
             ],
+
+            'people' => ['nullable', 'array'],
+            'people.*.person_id' => [
+                'required',
+                'integer',
+                'exists:people,id',
+                'distinct',
+            ],
+            'people.*.role' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResearchProjectRequest;
+use App\Models\Person;
 use App\Models\ResearchProject;
+use App\Services\PersonService;
 use App\Services\ResearchProjectService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -11,7 +13,8 @@ use Illuminate\Routing\Controllers\Middleware;
 class ResearchProjectController extends Controller implements HasMiddleware
 {
     public function __construct(
-        protected ResearchProjectService $projectService
+        protected ResearchProjectService $projectService,
+        protected PersonService $personService
     ) {}
 
     public static function middleware(): array
@@ -42,14 +45,21 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function create()
     {
-        return view('research-projects.create');
+        $people = $this->personService->getActive();
+
+        return view('research-projects.create', compact('people'));
     }
 
     public function store(ResearchProjectRequest $request)
     {
-        $project = $this->projectService->create(
-            $request->validated()
-        );
+        $data = $request->validated();
+
+        $people = $data['people'] ?? [];
+        unset($data['people']);
+
+        $project = $this->projectService->create($data);
+
+        $this->projectService->syncPeople($project, $people);
 
         return redirect()
             ->route('research-projects.show', $project->slug)
@@ -58,18 +68,30 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function edit(ResearchProject $researchProject)
     {
+        $researchProject->load('people');
+        $people = $this->personService->getActive();
+
         return view(
             'research-projects.edit',
-            compact('researchProject')
+            compact('researchProject', 'people')
         );
     }
 
     public function update(ResearchProjectRequest $request, ResearchProject $researchProject)
     {
-        $project = $this->projectService->update(
+        $data = $request->validated();
+
+        $people = $data['people'] ?? [];
+        unset($data['people']);
+
+        $this->projectService->update($researchProject, $data);
+
+        $this->projectService->syncPeople(
             $researchProject,
-            $request->validated()
+            $people
         );
+
+        $project = $researchProject->fresh('people');
 
         return redirect()
             ->route('research-projects.show', $project->slug)
