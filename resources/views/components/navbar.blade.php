@@ -19,12 +19,12 @@
                 Research
             </x-nav-link>
 
-            <a
-                href="#"
-                class="rounded-md px-3 py-2 text-sm font-medium text-text-muted transition hover:bg-background hover:text-primary"
+            <x-nav-link
+                href="{{ route('publications.index') }}"
+                :active="request()->routeIs('publications.*')"
             >
                 Publications
-            </a>
+            </x-nav-link>
 
             <a
                 href="#"
@@ -105,12 +105,12 @@
                 Research
             </x-mobile-nav-link>
 
-            <a
-                href="#"
-                class="block rounded-md px-3 py-3 text-sm font-medium text-text-muted hover:bg-background hover:text-primary"
+            <x-mobile-nav-link
+                href="{{ route('publications.index') }}"
+                :active="request()->routeIs('publications.*')"
             >
                 Publications
-            </a>
+            </x-mobile-nav-link>
 
             <a
                 href="#"

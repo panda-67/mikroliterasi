@@ -27,6 +27,11 @@ class Publication extends Model
         'file',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function people(): BelongsToMany
     {
         return $this->belongsToMany(
