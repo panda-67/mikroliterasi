@@ -40,6 +40,20 @@ class ResearchProjectRequest extends FormRequest
                 'string',
                 'max:255',
             ],
+
+            'research_areas' => ['nullable', 'array'],
+            'research_areas.*' => [
+                'integer',
+                'exists:research_areas,id',
+                'distinct',
+            ],
+
+            'publications' => ['nullable', 'array'],
+            'publications.*' => [
+                'integer',
+                'exists:publications,id',
+                'distinct',
+            ],
         ];
     }
 }

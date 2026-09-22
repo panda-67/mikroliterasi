@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ResearchProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,5 @@ Route::delete(
     '/research-projects/{researchProject}/featured-image',
     [ResearchProjectController::class, 'removeFeaturedImage']
 )->name('research-projects.featured-image.destroy');
+
+Route::resource('publications', PublicationController::class);

@@ -1,3 +1,21 @@
+@php
+    $selectedPublications = old('publications');
+
+    if ($selectedPublications === null) {
+        $selectedPublications = isset($project)
+            ? $project->publications
+                ->pluck('id')
+                ->map(fn ($id) => (string) $id)
+                ->toArray()
+            : [];
+    }
+
+    $selectedPublications = array_map(
+        'strval',
+        $selectedPublications
+    );
+@endphp
+
 <div class="space-y-6">
 
     {{-- Title --}}
@@ -19,6 +37,199 @@
 
         @error('title')
             <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
+        @enderror
+    </div>
+
+    {{-- Short Description --}}
+    <div>
+        <label
+            for="short_description"
+            class="mb-2 block text-sm font-medium text-text"
+        >
+            Short Description
+        </label>
+
+        <textarea
+            id="short_description"
+            name="short_description"
+            rows="3"
+            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+        >{{ old('short_description', $project->short_description ?? '') }}</textarea>
+
+        @error('short_description')
+            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
+        @enderror
+    </div>
+
+    {{-- Description --}}
+    <div>
+        <label
+            for="description"
+            class="mb-2 block text-sm font-medium text-text"
+        >
+            Description
+        </label>
+
+        <textarea
+            id="description"
+            name="description"
+            rows="8"
+            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+        >{{ old('description', $project->description ?? '') }}</textarea>
+
+        @error('description')
+            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
+        @enderror
+    </div>
+
+    {{-- Research Areas --}}
+    <div class="space-y-4">
+        <div>
+            <h2 class="text-sm font-semibold text-text">
+                Research Areas
+            </h2>
+
+            <p class="mt-1 text-xs text-text-muted">
+                Pilih bidang penelitian yang terkait dengan research project ini.
+            </p>
+        </div>
+
+        @php
+            $selectedResearchAreas = old('research_areas');
+
+            if ($selectedResearchAreas === null) {
+                $selectedResearchAreas = isset($project)
+                    ? $project->researchAreas
+                        ->pluck('id')
+                        ->map(fn ($id) => (string) $id)
+                        ->toArray()
+                    : [];
+            }
+
+            $selectedResearchAreas = array_map(
+                'strval',
+                $selectedResearchAreas
+            );
+        @endphp
+
+        @if ($researchAreas->isEmpty())
+            <div class="rounded-lg border border-border bg-surface px-4 py-3">
+                <p class="text-xs text-text-muted">
+                    Belum ada research area yang tersedia.
+                </p>
+            </div>
+        @else
+            <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($researchAreas as $researchArea)
+                    <label
+                        for="research-area-{{ $researchArea->id }}"
+                        class="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-4 transition hover:bg-surface"
+                    >
+                        <input
+                            type="checkbox"
+                            id="research-area-{{ $researchArea->id }}"
+                            name="research_areas[]"
+                            value="{{ $researchArea->id }}"
+                            @checked(in_array(
+                                (string) $researchArea->id,
+                                $selectedResearchAreas,
+                                true
+                            ))
+                            class="mt-0.5 rounded border-border"
+                        >
+
+                        <span>
+                            <span class="block text-sm font-medium text-text">
+                                {{ $researchArea->name }}
+                            </span>
+
+                            @if ($researchArea->description)
+                                <span class="mt-1 block text-xs text-text-muted">
+                                    {{ $researchArea->description }}
+                                </span>
+                            @endif
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        @endif
+
+        @error('research_areas')
+            <p class="text-xs text-red-600">
+                {{ $message }}
+            </p>
+        @enderror
+
+        @error('research_areas.*')
+            <p class="text-xs text-red-600">
+                {{ $message }}
+            </p>
+        @enderror
+    </div>
+
+    {{-- Publications --}}
+    <div class="space-y-4">
+       <div>
+            <h2 class="text-sm font-semibold text-text">
+                Publications
+            </h2>
+
+            <p class="mt-1 text-xs text-text-muted">
+                Pilih publikasi yang terkait dengan research project ini.
+            </p>
+        </div>
+
+
+        @if ($publications->isEmpty())
+            <p class="text-sm text-gray-500">
+                Belum ada publication yang tersedia.
+            </p>
+        @else
+            <div class="space-y-3">
+                @foreach ($publications as $publication)
+                    <label
+                        class="flex items-start gap-3 rounded-lg border border-gray-200 bg-[#edecea] p-4 cursor-pointer hover:bg-gray-100"
+                    >
+                        <input
+                            type="checkbox"
+                            name="publications[]"
+                            value="{{ $publication->id }}"
+                            @checked(
+                                in_array(
+                                    (string) $publication->id,
+                                    $selectedPublications,
+                                    true
+                                )
+                            )
+                            class="mt-1 rounded border-gray-300 text-gray-800 focus:ring-gray-500"
+                        >
+
+                        <span class="min-w-0">
+                            <span class="block text-sm font-medium text-gray-900">
+                                {{ $publication->title }}
+                            </span>
+
+                            <span class="mt-1 block text-xs text-gray-500">
+                                {{ $publication->year ?? 'Tahun tidak tersedia' }}
+                                ·
+                                {{ str_replace('_', ' ', ucfirst($publication->publication_type)) }}
+                            </span>
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        @endif
+
+        @error('publications')
+            <p class="mt-2 text-sm text-red-600">
+                {{ $message }}
+            </p>
+        @enderror
+
+        @error('publications.*')
+            <p class="mt-2 text-sm text-red-600">
+                {{ $message }}
+            </p>
         @enderror
     </div>
 
@@ -241,48 +452,6 @@
         </p>
 
         @error('featured_image')
-            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
-        @enderror
-    </div>
-
-    {{-- Short Description --}}
-    <div>
-        <label
-            for="short_description"
-            class="mb-2 block text-sm font-medium text-text"
-        >
-            Short Description
-        </label>
-
-        <textarea
-            id="short_description"
-            name="short_description"
-            rows="3"
-            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        >{{ old('short_description', $project->short_description ?? '') }}</textarea>
-
-        @error('short_description')
-            <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
-        @enderror
-    </div>
-
-    {{-- Description --}}
-    <div>
-        <label
-            for="description"
-            class="mb-2 block text-sm font-medium text-text"
-        >
-            Description
-        </label>
-
-        <textarea
-            id="description"
-            name="description"
-            rows="8"
-            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        >{{ old('description', $project->description ?? '') }}</textarea>
-
-        @error('description')
             <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
         @enderror
     </div>

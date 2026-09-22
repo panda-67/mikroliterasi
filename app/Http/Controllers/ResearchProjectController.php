@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ResearchProjectRequest;
-use App\Models\Person;
+use App\Models\Publication;
+use App\Models\ResearchArea;
 use App\Models\ResearchProject;
 use App\Services\PersonService;
 use App\Services\ResearchProjectService;
@@ -40,6 +41,12 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function show(ResearchProject $researchProject)
     {
+        $researchProject->load([
+            'people',
+            'researchAreas',
+            'publications',
+        ]);
+
         return view('research-projects.show', compact('researchProject'));
     }
 
@@ -47,7 +54,19 @@ class ResearchProjectController extends Controller implements HasMiddleware
     {
         $people = $this->personService->getActive();
 
-        return view('research-projects.create', compact('people'));
+        $researchAreas = ResearchArea::query()
+            ->orderBy('name')
+            ->get();
+
+        $publications = Publication::orderByDesc('year')
+            ->orderBy('title')
+            ->get();
+
+        return view('research-projects.create', compact(
+            'people',
+            'researchAreas',
+            'publications'
+        ));
     }
 
     public function store(ResearchProjectRequest $request)
@@ -55,11 +74,22 @@ class ResearchProjectController extends Controller implements HasMiddleware
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
-        unset($data['people']);
+        $researchAreas = $data['research_areas'] ?? [];
+        $publications = $data['publications'] ?? [];
+
+        unset(
+            $data['people'],
+            $data['research_areas'],
+            $data['publications']
+        );
 
         $project = $this->projectService->create($data);
 
         $this->projectService->syncPeople($project, $people);
+
+        $this->projectService->syncResearchAreas($project, $researchAreas);
+
+        $this->projectService->syncPublications($project, $publications);
 
         return redirect()
             ->route('research-projects.show', $project->slug)
@@ -71,10 +101,20 @@ class ResearchProjectController extends Controller implements HasMiddleware
         $researchProject->load('people');
         $people = $this->personService->getActive();
 
-        return view(
-            'research-projects.edit',
-            compact('researchProject', 'people')
-        );
+        $researchAreas = ResearchArea::query()
+            ->orderBy('name')
+            ->get();
+
+        $publications = Publication::orderByDesc('year')
+            ->orderBy('title')
+            ->get();
+
+        return view('research-projects.edit', compact(
+            'researchProject',
+            'people',
+            'researchAreas',
+            'publications'
+        ));
     }
 
     public function update(ResearchProjectRequest $request, ResearchProject $researchProject)
@@ -82,16 +122,28 @@ class ResearchProjectController extends Controller implements HasMiddleware
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
-        unset($data['people']);
+        $researchAreas = $data['research_areas'] ?? [];
+        $publications = $data['publications'] ?? [];
+
+        unset(
+            $data['people'],
+            $data['research_areas'],
+            $data['publications']
+        );
 
         $this->projectService->update($researchProject, $data);
 
-        $this->projectService->syncPeople(
-            $researchProject,
-            $people
-        );
+        $this->projectService->syncPeople($researchProject, $people);
 
-        $project = $researchProject->fresh('people');
+        $this->projectService->syncResearchAreas($researchProject, $researchAreas);
+
+        $this->projectService->syncPublications($researchProject, $publications);
+
+        $project = $researchProject->fresh([
+            'people',
+            'researchAreas',
+            'publications'
+        ]);
 
         return redirect()
             ->route('research-projects.show', $project->slug)

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Publication;
+use App\Models\ResearchArea;
 use App\Models\ResearchProject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -306,6 +308,270 @@ class ResearchProjectTest extends TestCase
         $this->assertNotSame(
             $oldPath,
             $project->featured_image
+        );
+    }
+
+    public function test_authenticated_user_can_create_research_project_with_research_areas(): void
+    {
+        $user = User::factory()->create();
+
+        $areas = ResearchArea::factory()->count(3)->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->post(route('research-projects.store'), [
+                'title' => 'Research Project with Areas',
+                'short_description' => 'Short description',
+                'description' => 'Project description',
+                'status' => 'ongoing',
+                'research_areas' => $areas->pluck('id')->toArray(),
+            ]);
+
+        $response->assertRedirect();
+
+        $project = ResearchProject::where(
+            'title',
+            'Research Project with Areas'
+        )->firstOrFail();
+
+        $this->assertCount(3, $project->researchAreas);
+
+        $this->assertDatabaseHas(
+            'research_project_research_area',
+            [
+                'research_project_id' => $project->id,
+                'research_area_id' => $areas[0]->id,
+            ]
+        );
+    }
+
+    public function test_authenticated_user_can_update_research_project_research_areas(): void
+    {
+        $user = User::factory()->create();
+
+        $project = ResearchProject::factory()->create();
+
+        $oldAreas = ResearchArea::factory()->count(2)->create();
+        $newAreas = ResearchArea::factory()->count(3)->create();
+
+        $project->researchAreas()->sync(
+            $oldAreas->pluck('id')
+        );
+
+        $response = $this
+            ->actingAs($user)
+            ->put(
+                route('research-projects.update', $project),
+                [
+                    'title' => $project->title,
+                    'short_description' => $project->short_description,
+                    'description' => $project->description,
+                    'status' => $project->status,
+                    'research_areas' => $newAreas->pluck('id')->toArray(),
+                ]
+            );
+
+        $response->assertRedirect();
+
+        $project->refresh();
+
+        $this->assertCount(3, $project->researchAreas);
+
+        foreach ($newAreas as $area) {
+            $this->assertTrue(
+                $project->researchAreas->contains($area)
+            );
+        }
+
+        foreach ($oldAreas as $area) {
+            $this->assertFalse(
+                $project->researchAreas->contains($area)
+            );
+        }
+    }
+
+    public function test_research_project_can_have_publications(): void
+    {
+        $project = ResearchProject::factory()->create();
+
+        $publications = Publication::factory()
+            ->count(3)
+            ->create();
+
+        $project->publications()->sync(
+            $publications->pluck('id')
+        );
+
+        $project->refresh();
+
+        $this->assertCount(
+            3,
+            $project->publications
+        );
+
+        $this->assertEqualsCanonicalizing(
+            $publications->pluck('id')->toArray(),
+            $project->publications->pluck('id')->toArray()
+        );
+    }
+
+    public function test_sync_publications_replaces_existing_publications(): void
+    {
+        $project = ResearchProject::factory()->create();
+
+        $publications = Publication::factory()
+            ->count(3)
+            ->create();
+
+        $service = app(
+            \App\Services\ResearchProjectService::class
+        );
+
+        $service->syncPublications(
+            $project,
+            $publications->pluck('id')->toArray()
+        );
+
+        $project->refresh();
+
+        $this->assertCount(
+            3,
+            $project->publications
+        );
+
+        $service->syncPublications(
+            $project,
+            [$publications[0]->id]
+        );
+
+        $project->refresh();
+
+        $this->assertCount(
+            1,
+            $project->publications
+        );
+
+        $this->assertSame(
+            $publications[0]->id,
+            $project->publications->first()->id
+        );
+    }
+
+    public function test_sync_publications_can_remove_all_publications(): void
+    {
+        $project = ResearchProject::factory()->create();
+
+        $publications = Publication::factory()
+            ->count(2)
+            ->create();
+
+        $service = app(
+            \App\Services\ResearchProjectService::class
+        );
+
+        $service->syncPublications(
+            $project,
+            $publications->pluck('id')->toArray()
+        );
+
+        $service->syncPublications(
+            $project,
+            []
+        );
+
+        $project->refresh();
+
+        $this->assertCount(
+            0,
+            $project->publications
+        );
+    }
+
+    public function test_authenticated_user_can_create_research_project_with_publications(): void
+    {
+        $user = User::factory()->create();
+
+        $publications = Publication::factory()
+            ->count(3)
+            ->create();
+
+        $response = $this->actingAs($user)->post(
+            route('research-projects.store'),
+            [
+                'title' => 'Elephant Corridor Research',
+                'status' => 'ongoing',
+                'publications' => $publications
+                    ->pluck('id')
+                    ->toArray(),
+            ]
+        );
+
+        $project = ResearchProject::first();
+
+        $response->assertRedirect(
+            route('research-projects.show', $project->slug)
+        );
+
+        $this->assertCount(
+            3,
+            $project->fresh()->publications
+        );
+
+        $this->assertDatabaseCount(
+            'research_project_publication',
+            3
+        );
+    }
+
+    public function test_authenticated_user_can_update_research_project_publications(): void
+    {
+        $user = User::factory()->create();
+
+        $oldPublications = Publication::factory()
+            ->count(2)
+            ->create();
+
+        $newPublications = Publication::factory()
+            ->count(2)
+            ->create();
+
+        $project = ResearchProject::factory()->create([
+            'title' => 'Elephant Corridor Research',
+            'status' => 'ongoing',
+        ]);
+
+        $project->publications()->sync(
+            $oldPublications->pluck('id')->toArray()
+        );
+
+        $response = $this->actingAs($user)->put(
+            route('research-projects.update', $project),
+            [
+                'title' => $project->title,
+                'status' => $project->status,
+                'publications' => $newPublications
+                    ->pluck('id')
+                    ->toArray(),
+            ]
+        );
+
+        $response->assertRedirect(
+            route(
+                'research-projects.show',
+                $project->fresh()->slug
+            )
+        );
+
+        $project->refresh();
+
+        $this->assertEqualsCanonicalizing(
+            $newPublications->pluck('id')->toArray(),
+            $project->publications->pluck('id')->toArray()
+        );
+
+        $this->assertCount(
+            2,
+            $project->publications
         );
     }
 }

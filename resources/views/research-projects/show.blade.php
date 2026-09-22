@@ -2,6 +2,18 @@
 
 @php
     $project = $researchProject;
+
+    $publicationTypeLabels = [
+        'journal_article' => 'Journal Article',
+        'conference_paper' => 'Conference Paper',
+        'book' => 'Book',
+        'book_chapter' => 'Book Chapter',
+        'technical_report' => 'Technical Report',
+        'policy_brief' => 'Policy Brief',
+        'thesis' => 'Thesis',
+        'dataset' => 'Dataset',
+        'other' => 'Other',
+    ];
 @endphp
 
 @section('title', config('app.name', 'Mikroliterasi') . ' | ' . $project->title)
@@ -121,6 +133,139 @@
                             </div>
 
                         </article>
+                    @endif
+
+                    {{-- Research team --}}
+                    @if ($project->people->isNotEmpty())
+                        <section class="mt-12 border-t border-border pt-8">
+
+                            <h2 class="text-2xl font-semibold">
+                                Research team
+                            </h2>
+
+                            <div class="mt-6 divide-y divide-border border-y border-border">
+                                @foreach ($project->people as $person)
+                                    <div class="py-4 first:pt-4 last:pb-4">
+                                        <div class="flex items-start justify-between gap-4">
+
+                                            <div class="min-w-0">
+                                                <div class="text-sm font-medium text-text" >
+                                                    {{ $person->name }}
+                                                </div>
+
+                                                @if ($person->position)
+                                                    <p class="mt-1 text-sm text-text-muted">
+                                                        {{ $person->position }}
+                                                    </p>
+                                                @endif
+                                            </div>
+
+                                            @if ($person->pivot->role)
+                                                <span class="shrink-0 text-xs text-text-subtle">
+                                                    {{ $person->pivot->role }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                        </section>
+                    @endif
+
+                    {{-- Research areas --}}
+                    @if ($project->researchAreas->isNotEmpty())
+                        <section class="mt-12 border-t border-border pt-8">
+
+                            <h2 class="text-2xl font-semibold">
+                                Research areas
+                            </h2>
+
+                            <div class="mt-5 flex flex-wrap gap-2">
+                                @foreach ($project->researchAreas as $area)
+                                    <span
+                                        class="rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-text"
+                                    >
+                                        {{ $area->name }}
+                                    </span>
+                                @endforeach
+                            </div>
+
+                        </section>
+                    @endif
+
+                    {{-- Publications --}}
+                    @if ($project->publications->isNotEmpty())
+                        <section class="mt-12 border-t border-border pt-8">
+
+                            <h2 class="text-2xl font-semibold">
+                                Publications
+                            </h2>
+
+                            <div class="mt-6 divide-y divide-border border-y border-border">
+                                @foreach ($project->publications as $publication)
+                                    <article class="py-5 first:pt-5 last:pb-5">
+
+                                        <h3 class="text-base font-medium leading-6 text-text">
+                                            {{ $publication->title }}
+                                        </h3>
+
+                                        <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-text-muted">
+
+                                            @if ($publication->year)
+                                                <span>
+                                                    {{ $publication->year }}
+                                                </span>
+                                            @endif
+
+                                            @if ($publication->publication_type)
+                                                <span>
+                                                    {{ $publicationTypeLabels[$publication->publication_type] ?? 'Other' }}
+                                               </span>
+                                            @endif
+
+                                            @if ($publication->journal)
+                                                <span>
+                                                    {{ $publication->journal }}
+                                                </span>
+                                            @endif
+
+                                        </div>
+
+                                        @if ($publication->doi || $publication->url)
+                                            <div class="mt-3 flex flex-wrap gap-4 text-sm">
+
+                                                @if ($publication->doi)
+                                                    <a
+                                                        href="https://doi.org/{{ $publication->doi }}"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="text-primary hover:text-primary-hover"
+                                                    >
+                                                        DOI
+                                                    </a>
+                                                @endif
+
+                                                @if ($publication->url)
+                                                    <a
+                                                        href="{{ $publication->url }}"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="text-primary hover:text-primary-hover"
+                                                    >
+                                                        External link
+                                                    </a>
+                                                @endif
+
+                                            </div>
+                                        @endif
+
+                                    </article>
+                                @endforeach
+                            </div>
+
+                        </section>
                     @endif
 
                 </div>
