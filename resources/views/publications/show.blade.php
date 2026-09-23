@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $publication->title)
+@section('title', config('app.name', 'Mikroliterasi') . ' | ' . $publication->title)
 
 @section('content')
 
@@ -349,7 +349,7 @@
 
             </div>
 
-{{-- Back --}}
+            {{-- Back --}}
             <div class="mt-12 border-t border-border pt-6">
 
                 <a

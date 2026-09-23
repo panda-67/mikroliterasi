@@ -42,6 +42,14 @@ class PersonFactory extends Factory
 
             'website' => fake()->optional()->url(),
 
+            'scopus' => fake()->optional()->url(),
+
+            'google_scholar' => fake()->optional()->url(),
+
+            'orcid' => fake()->optional()->url(),
+
+            'sinta' => fake()->optional()->url(),
+
             'education' => fake()->sentence(),
 
             'research_interests' => fake()->sentence(),

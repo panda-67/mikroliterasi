@@ -8,7 +8,7 @@
     <section class="border-b border-border">
         <div class="flex flex-col gap-4 mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-12">
 
-<p class="text-sm font-medium uppercase tracking-wide text-primary">
+            <p class="text-sm font-medium uppercase tracking-wide text-primary">
                 Research outputs
             </p>
 
@@ -35,7 +35,7 @@
 
     {{-- Publications --}}
     <section>
-        <div class="mx-auto w-full max-w-300 px-4 py-10 sm:px-6 sm:py-12">
+        <div class="mx-auto w-full max-w-300 px-4 py-10 sm:px-8 sm:py-12">
 
             @if ($publications->isNotEmpty())
 

@@ -19,16 +19,13 @@ class PublicationController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware(
-                'auth',
-                only: [
-                    'create',
-                    'store',
-                    'edit',
-                    'update',
-                    'destroy',
-                ]
-            ),
+            new Middleware('auth', only: [
+                'create',
+                'store',
+                'edit',
+                'update',
+                'destroy',
+            ]),
         ];
     }
 

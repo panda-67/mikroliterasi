@@ -26,14 +26,14 @@
                 Publications
             </x-nav-link>
 
-            <a
-                href="#"
-                class="rounded-md px-3 py-2 text-sm font-medium text-text-muted transition hover:bg-background hover:text-primary"
+            <x-nav-link
+                href="{{ route('people.index') }}"
+                :active="request()->routeIs('people.*')"
             >
                 People
-            </a>
+            </x-nav-link>
 
-            <x-nav-link
+<x-nav-link
                 href="{{ route('about') }}"
                 :active="request()->routeIs('about')"
             >
@@ -112,12 +112,12 @@
                 Publications
             </x-mobile-nav-link>
 
-            <a
-                href="#"
-                class="block rounded-md px-3 py-3 text-sm font-medium text-text-muted hover:bg-background hover:text-primary"
+             <x-mobile-nav-link
+                href="{{ route('people.index') }}"
+                :active="request()->routeIs('people.*')"
             >
                 People
-            </a>
+            </x-mobile-nav-link>
 
             <x-mobile-nav-link
                 href="{{ route('about') }}"

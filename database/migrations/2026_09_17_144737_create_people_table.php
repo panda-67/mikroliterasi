@@ -26,6 +26,11 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('website')->nullable();
 
+            $table->string('scopus')->nullable();
+            $table->string('google_scholar')->nullable();
+            $table->string('orcid')->nullable();
+            $table->string('sinta')->nullable();
+
             $table->text('education')->nullable();
             $table->text('research_interests')->nullable();
 

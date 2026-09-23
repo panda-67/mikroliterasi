@@ -20,10 +20,19 @@ class Person extends Model
         'bio',
         'email',
         'website',
+        'scopus',
+        'google_scholar',
+        'orcid',
+        'sinta',
         'education',
         'research_interests',
         'status',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function researchProjects(): BelongsToMany
     {
