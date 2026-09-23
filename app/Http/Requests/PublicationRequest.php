@@ -41,6 +41,15 @@ class PublicationRequest extends FormRequest
                 'integer',
                 'min:1',
             ],
+
+            'research_projects' => ['nullable', 'array'],
+
+            'research_projects.*' => [
+                'required',
+                'integer',
+                'exists:research_projects,id',
+                'distinct',
+            ],
         ];
     }
 }

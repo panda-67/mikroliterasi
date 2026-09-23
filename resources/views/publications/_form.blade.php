@@ -424,6 +424,103 @@
         </template>
     </section>
 
+    {{-- Research projects --}}
+    <section class="border-t border-border pt-8">
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-text">
+                Research projects
+            </h2>
+
+            <p class="mt-1 text-sm text-text-muted">
+                Select the research projects related to this publication.
+            </p>
+        </div>
+
+        @php
+            $selectedResearchProjects = old('research_projects');
+
+            if ($selectedResearchProjects === null) {
+                $selectedResearchProjects = isset($publication)
+                    ? $publication->researchProjects
+                        ->pluck('id')
+                        ->map(fn ($id) => (string) $id)
+                        ->toArray()
+                    : [];
+            }
+
+            $selectedResearchProjects = array_map(
+                'strval',
+                $selectedResearchProjects
+            );
+        @endphp
+
+        @if ($researchProjects->isNotEmpty())
+
+            <div class="divide-y divide-border border-y border-border">
+
+                @foreach ($researchProjects as $researchProject)
+
+                    <label
+                        for="research_project_{{ $researchProject->id }}"
+                        class="flex cursor-pointer items-start gap-3 py-4"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="research_projects[]"
+                            value="{{ $researchProject->id }}"
+                            id="research_project_{{ $researchProject->id }}"
+                            @checked(
+                                in_array(
+                                    (string) $researchProject->id,
+                                    $selectedResearchProjects,
+                                    true
+                                )
+                            )
+                            class="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                        >
+
+                        <span class="min-w-0">
+                            <span class="block text-sm font-medium text-text">
+                                {{ $researchProject->title }}
+                            </span>
+
+                            @if ($researchProject->short_description)
+                                <span class="mt-1 block text-sm leading-6 text-text-muted">
+                                    {{ $researchProject->short_description }}
+                                </span>
+                            @endif
+                        </span>
+
+                    </label>
+
+                @endforeach
+
+            </div>
+
+        @else
+
+            <div class="border-y border-border py-6">
+                <p class="text-sm text-text-muted">
+                    No research projects are available yet.
+                </p>
+            </div>
+
+        @endif
+
+        @error('research_projects')
+            <p class="mt-2 text-sm text-error">
+                {{ $message }}
+            </p>
+        @enderror
+
+        @error('research_projects.*')
+            <p class="mt-2 text-sm text-error">
+                {{ $message }}
+            </p>
+        @enderror
+    </section>
+
     {{-- Identifiers and links --}}
     <section class="border-t border-border pt-8">
         <div class="mb-6">

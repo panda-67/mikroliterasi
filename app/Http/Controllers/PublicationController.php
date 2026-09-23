@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PublicationRequest;
 use App\Models\Person;
 use App\Models\Publication;
+use App\Models\ResearchProject;
 use App\Services\PublicationService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -40,11 +41,15 @@ class PublicationController extends Controller implements HasMiddleware
 
     public function create()
     {
+        $researchProjects = ResearchProject::query()
+            ->orderBy('title')
+            ->get();
+
         $people = Person::query()
             ->orderBy('name')
             ->get();
 
-        return view('publications.create', compact('people'));
+        return view('publications.create', compact('people', 'researchProjects'));
     }
 
     public function store(PublicationRequest $request)
@@ -52,14 +57,23 @@ class PublicationController extends Controller implements HasMiddleware
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
+        $researchProjects = $data['research_projects'] ?? [];
 
-        unset($data['people']);
+        unset(
+            $data['people'],
+            $data['research_projects']
+        );
 
         $publication = $this->publicationService->create($data);
 
         $this->publicationService->syncPeople(
             $publication,
             $people
+        );
+
+        $this->publicationService->syncResearchProjects(
+            $publication,
+            $researchProjects
         );
 
         return redirect()
@@ -88,12 +102,16 @@ class PublicationController extends Controller implements HasMiddleware
             ->orderBy('name')
             ->get();
 
+        $researchProjects = ResearchProject::query()
+            ->orderBy('title')
+            ->get();
+
         $publication->load([
             'people',
             'researchProjects',
         ]);
 
-        return view('publications.edit', compact('publication', 'people'));
+        return view('publications.edit', compact('publication', 'people', 'researchProjects'));
     }
 
     public function update(
@@ -104,8 +122,12 @@ class PublicationController extends Controller implements HasMiddleware
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
+        $researchProjects = $data['research_projects'] ?? [];
 
-        unset($data['people']);
+        unset(
+            $data['people'],
+            $data['research_projects']
+        );
 
         $publication = $this->publicationService->update(
             $publication,
@@ -115,6 +137,11 @@ class PublicationController extends Controller implements HasMiddleware
         $this->publicationService->syncPeople(
             $publication,
             $people
+        );
+
+        $this->publicationService->syncResearchProjects(
+            $publication,
+            $researchProjects
         );
 
         return redirect()

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Person;
 use App\Models\Publication;
+use App\Models\ResearchProject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -359,5 +360,127 @@ class PublicationTest extends TestCase
         $this->assertDatabaseMissing('publications', [
             'title' => 'Publication Duplicate Author',
         ]);
+    }
+
+    public function test_authenticated_user_can_create_publication_with_research_projects(): void
+    {
+        $user = User::factory()->create();
+
+        $projects = ResearchProject::factory()
+            ->count(3)
+            ->create();
+
+        $this->actingAs($user)
+            ->post(route('publications.store'), [
+                'title' => 'Publication With Research Projects',
+                'publication_type' => 'journal_article',
+                'year' => 2026,
+                'research_projects' => $projects
+                    ->pluck('id')
+                    ->toArray(),
+            ])
+            ->assertRedirect();
+
+        $publication = Publication::where(
+            'title',
+            'Publication With Research Projects'
+        )->firstOrFail();
+
+        foreach ($projects as $project) {
+            $this->assertDatabaseHas(
+                'research_project_publication',
+                [
+                    'publication_id' => $publication->id,
+                    'research_project_id' => $project->id,
+                ]
+            );
+        }
+    }
+
+    public function test_authenticated_user_can_update_publication_research_projects(): void
+    {
+        $user = User::factory()->create();
+
+        $projects = ResearchProject::factory()
+            ->count(3)
+            ->create();
+
+        $publication = Publication::factory()->create();
+
+        $publication->researchProjects()->attach([
+            $projects[0]->id,
+            $projects[1]->id,
+        ]);
+
+        $this->actingAs($user)
+            ->put(
+                route('publications.update', $publication),
+                [
+                    'title' => $publication->title,
+                    'publication_type' => $publication->publication_type,
+                    'year' => $publication->year,
+                    'research_projects' => [
+                        $projects[2]->id,
+                    ],
+                ]
+            )
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing(
+            'research_project_publication',
+            [
+                'publication_id' => $publication->id,
+                'research_project_id' => $projects[0]->id,
+            ]
+        );
+
+        $this->assertDatabaseMissing(
+            'research_project_publication',
+            [
+                'publication_id' => $publication->id,
+                'research_project_id' => $projects[1]->id,
+            ]
+        );
+
+        $this->assertDatabaseHas(
+            'research_project_publication',
+            [
+                'publication_id' => $publication->id,
+                'research_project_id' => $projects[2]->id,
+            ]
+        );
+    }
+
+    public function test_publication_research_projects_cannot_be_duplicated(): void
+    {
+        $user = User::factory()->create();
+
+        $project = ResearchProject::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(
+                route('publications.store'),
+                [
+                    'title' => 'Publication Duplicate Project',
+                    'publication_type' => 'journal_article',
+                    'year' => 2026,
+                    'research_projects' => [
+                        $project->id,
+                        $project->id,
+                    ],
+                ]
+            );
+
+        $response
+            ->assertSessionHasErrors(
+                'research_projects.1'
+            );
+
+        $this->assertDatabaseMissing(
+            'publications',
+            [
+                'title' => 'Publication Duplicate Project',
+            ]
+        );
     }
 }

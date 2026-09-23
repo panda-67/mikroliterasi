@@ -207,9 +207,12 @@
                                 @foreach ($project->publications as $publication)
                                     <article class="py-5 first:pt-5 last:pb-5">
 
-                                        <h3 class="text-base font-medium leading-6 text-text">
+                                        <a
+                                            href="{{ route('publications.show', $publication->slug) }}"
+                                            class="text-base font-medium leading-6 text-primary hover:text-primary-hover"
+                                        >
                                             {{ $publication->title }}
-                                        </h3>
+                                        </a>
 
                                         <div class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm text-text-muted">
 
