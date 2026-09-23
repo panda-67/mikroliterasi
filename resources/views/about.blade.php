@@ -5,7 +5,7 @@
 @section('content')
     {{-- Header --}}
     <section class="border-b border-border bg-background">
-        <div class="mx-auto max-w-205 px-6 py-16 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-300 px-6 py-16 lg:px-8 lg:py-20">
             <p class="text-sm font-semibold uppercase tracking-wider text-primary">
                 About Mikroliterasi
             </p>
@@ -24,7 +24,7 @@
 
     {{-- About --}}
     <section class="bg-surface">
-        <div class="mx-auto max-w-205 px-6 py-16 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-300 px-6 py-16 lg:px-8 lg:py-20">
             <div>
                 <h2 class="text-2xl font-semibold tracking-tight text-text">
                     Our approach
