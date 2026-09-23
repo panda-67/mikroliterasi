@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Person;
 use App\Models\Publication;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -217,5 +218,146 @@ class PublicationTest extends TestCase
             'original-publication',
             $publication->slug
         );
+    }
+
+    public function test_authenticated_user_can_create_publication_with_authors(): void
+    {
+        $user = User::factory()->create();
+
+        $people = Person::factory()
+            ->count(3)
+            ->create();
+
+        $this->actingAs($user)
+            ->post(route('publications.store'), [
+                'title' => 'Publication With Authors',
+                'publication_type' => 'journal_article',
+                'year' => 2026,
+                'people' => [
+                    [
+                        'person_id' => $people[0]->id,
+                        'author_order' => 1,
+                    ],
+                    [
+                        'person_id' => $people[1]->id,
+                        'author_order' => 2,
+                    ],
+                    [
+                        'person_id' => $people[2]->id,
+                        'author_order' => 3,
+                    ],
+                ],
+            ])
+            ->assertRedirect();
+
+        $publication = Publication::where(
+            'title',
+            'Publication With Authors'
+        )->firstOrFail();
+
+        $this->assertDatabaseHas('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[0]->id,
+            'author_order' => 1,
+        ]);
+
+        $this->assertDatabaseHas('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[1]->id,
+            'author_order' => 2,
+        ]);
+
+        $this->assertDatabaseHas('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[2]->id,
+            'author_order' => 3,
+        ]);
+    }
+
+    public function test_authenticated_user_can_update_publication_authors(): void
+    {
+        $user = User::factory()->create();
+
+        $people = Person::factory()
+            ->count(3)
+            ->create();
+
+        $publication = Publication::factory()->create();
+
+        $publication->people()->attach([
+            $people[0]->id => [
+                'author_order' => 1,
+            ],
+            $people[1]->id => [
+                'author_order' => 2,
+            ],
+        ]);
+
+        $this->actingAs($user)
+            ->put(
+                route('publications.update', $publication),
+                [
+                    'title' => $publication->title,
+                    'publication_type' => $publication->publication_type,
+                    'year' => $publication->year,
+                    'people' => [
+                        [
+                            'person_id' => $people[2]->id,
+                            'author_order' => 1,
+                        ],
+                    ],
+                ]
+            )
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[0]->id,
+        ]);
+
+        $this->assertDatabaseMissing('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[1]->id,
+        ]);
+
+        $this->assertDatabaseHas('publication_people', [
+            'publication_id' => $publication->id,
+            'person_id' => $people[2]->id,
+            'author_order' => 1,
+        ]);
+    }
+
+    public function test_publication_authors_cannot_be_duplicated(): void
+    {
+        $user = User::factory()->create();
+
+        $person = Person::factory()->create();
+
+        $response = $this->actingAs($user)
+            ->post(
+                route('publications.store'),
+                [
+                    'title' => 'Publication Duplicate Author',
+                    'publication_type' => 'journal_article',
+                    'year' => 2026,
+                    'people' => [
+                        [
+                            'person_id' => $person->id,
+                            'author_order' => 1,
+                        ],
+                        [
+                            'person_id' => $person->id,
+                            'author_order' => 2,
+                        ],
+                    ],
+                ]
+            );
+
+        $response
+            ->assertSessionHasErrors('people.1.person_id');
+
+        $this->assertDatabaseMissing('publications', [
+            'title' => 'Publication Duplicate Author',
+        ]);
     }
 }

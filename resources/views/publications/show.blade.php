@@ -182,7 +182,6 @@
                         </div>
                     </section>
 
-
                     {{-- Abstract --}}
                     @if ($publication->abstract)
                         <section class="mt-12 border-t border-border pt-8">
@@ -198,7 +197,6 @@
                         </section>
                     @endif
 
-
                     {{-- Authors --}}
                     @if ($publication->people->isNotEmpty())
                         <section class="mt-12 border-t border-border pt-8">
@@ -209,7 +207,7 @@
 
                             <div class="mt-6 divide-y divide-border border-y border-border">
 
-                                @foreach ($publication->people->sortBy('pivot.author_order') as $person)
+                                @foreach ($publication->people as $person)
 
                                     <div class="py-4 first:pt-4 last:pb-4">
 
@@ -245,7 +243,6 @@
 
                         </section>
                     @endif
-
 
                     {{-- Research projects --}}
                     @if ($publication->researchProjects->isNotEmpty())
@@ -284,7 +281,6 @@
                     @endif
 
                 </main>
-
 
                 {{-- Sidebar --}}
                 <aside>
@@ -353,8 +349,7 @@
 
             </div>
 
-
-            {{-- Back --}}
+{{-- Back --}}
             <div class="mt-12 border-t border-border pt-6">
 
                 <a
@@ -368,7 +363,6 @@
 
         </div>
     </section>
-
 
     {{-- Delete modal --}}
     @auth
@@ -417,7 +411,6 @@
 
             </div>
         </div>
-
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {

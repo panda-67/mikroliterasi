@@ -47,6 +47,30 @@ class PublicationService
         $publication->delete();
     }
 
+    public function syncPeople(
+        Publication $publication,
+        array $people
+    ): void {
+        $syncData = [];
+
+        foreach ($people as $index => $person) {
+            $syncData[$person['person_id']] = [
+                'author_order' => $person['author_order'] ?? ($index + 1),
+            ];
+        }
+
+        $publication->people()->sync($syncData);
+    }
+
+    public function syncResearchProjects(
+        Publication $publication,
+        array $researchProjects
+    ): void {
+        $publication->researchProjects()->sync(
+            $researchProjects
+        );
+    }
+
     private function generateUniqueSlug(string $title): string
     {
         $slug = Str::slug($title);

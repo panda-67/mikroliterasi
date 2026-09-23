@@ -26,6 +26,21 @@ class PublicationRequest extends FormRequest
             'url' => ['nullable', 'url', 'max:255'],
             'abstract' => ['nullable', 'string'],
             'file' => ['nullable', 'file', 'mimes:pdf', 'max:10240'],
+
+            'people' => ['nullable', 'array'],
+
+            'people.*.person_id' => [
+                'required',
+                'integer',
+                'exists:people,id',
+                'distinct',
+            ],
+
+            'people.*.author_order' => [
+                'nullable',
+                'integer',
+                'min:1',
+            ],
         ];
     }
 }

@@ -25,7 +25,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 pb-12">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {{-- Title --}}
             <div class="md:col-span-2">
@@ -41,7 +41,6 @@
                     name="title"
                     id="title"
                     value="{{ old('title', $publication->title ?? '') }}"
-                    required
                     class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
 
@@ -64,7 +63,6 @@
                 <select
                     name="publication_type"
                     id="publication_type"
-                    required
                     class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 >
                     <option value="">Select type</option>
@@ -241,6 +239,190 @@
         </div>
     </section>
 
+    {{-- Authors --}}
+    <section class="border-t border-border pt-8">
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-text">
+                Authors
+            </h2>
+
+            <p class="mt-1 text-sm text-text-muted">
+                Add authors in their publication order.
+            </p>
+        </div>
+
+        @php
+            $selectedPeople = old('people');
+
+            if ($selectedPeople === null) {
+                $selectedPeople = isset($publication)
+                    ? $publication->people
+                        ->sortBy('pivot.author_order')
+                        ->values()
+                        ->map(fn ($person) => [
+                            'person_id' => $person->id,
+                            'author_order' => $person->pivot->author_order,
+                        ])
+                        ->toArray()
+                    : [];
+            }
+        @endphp
+
+        <div
+            id="authors-container"
+            class="space-y-3"
+        >
+
+            @foreach ($selectedPeople as $index => $selectedPerson)
+
+                <div
+                    class="author-row flex items-end gap-3"
+                >
+
+                    {{-- Order --}}
+                    <div class="w-12 shrink-0">
+                        <label class="block text-sm font-medium text-text">
+                            No.
+                        </label>
+
+                        <div
+                            class="author-order mt-2 flex h-10 items-center justify-center rounded-md border border-border bg-background text-sm text-text"
+                        >
+                            {{ $index + 1 }}
+                        </div>
+
+                        <input
+                            type="hidden"
+                            name="people[{{ $index }}][author_order]"
+                            value="{{ $selectedPerson['author_order'] ?? ($index + 1) }}"
+                            class="author-order-input"
+                        >
+                    </div>
+
+                    {{-- Person --}}
+                    <div class="min-w-0 flex-1">
+                        <label
+                            for="people_{{ $index }}_person_id"
+                            class="block text-sm font-medium text-text"
+                        >
+                            Person
+                        </label>
+
+                        <select
+                            name="people[{{ $index }}][person_id]"
+                            id="people_{{ $index }}_person_id"
+                            class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        >
+                            <option value="">
+                                Select person
+                            </option>
+
+                            @foreach ($people as $person)
+                                <option
+                                    value="{{ $person->id }}"
+                                    @selected(
+                                        (string) ($selectedPerson['person_id'] ?? '') ===
+                                        (string) $person->id
+                                    )
+                                >
+                                    {{ $person->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error("people.$index.person_id")
+                            <p class="mt-1 text-sm text-error">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    {{-- Remove --}}
+                    <button
+                        type="button"
+                        class="remove-author shrink-0 rounded-md border border-border-strong px-3 py-2 text-sm font-medium text-text hover:bg-background"
+                    >
+                        Remove
+                    </button>
+
+                </div>
+
+            @endforeach
+
+        </div>
+
+        <div class="mt-4">
+            <button
+                type="button"
+                id="add-author"
+                class="rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-text hover:bg-background"
+            >
+                Add Author
+            </button>
+        </div>
+
+        <template id="author-row-template">
+
+            <div class="author-row flex items-end gap-3">
+
+                {{-- Order --}}
+                <div class="w-12 shrink-0">
+                    <label class="block text-sm font-medium text-text">
+                        No.
+                    </label>
+
+                    <div
+                        class="author-order mt-2 flex h-10 items-center justify-center rounded-md border border-border bg-background text-sm text-text"
+                    >
+                        __ORDER__
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="people[__INDEX__][author_order]"
+                        value="__ORDER__"
+                        class="author-order-input"
+                    >
+                </div>
+
+                {{-- Person --}}
+                <div class="min-w-0 flex-1">
+                    <label
+                        for="people___INDEX___person_id"
+                        class="block text-sm font-medium text-text"
+                    >
+                        Person
+                    </label>
+
+                    <select
+                        name="people[__INDEX__][person_id]"
+                        id="people___INDEX___person_id"
+                        class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    >
+                        <option value="">
+                            Select person
+                        </option>
+
+                        @foreach ($people as $person)
+                            <option value="{{ $person->id }}">
+                                {{ $person->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Remove --}}
+                <button
+                    type="button"
+                    class="remove-author shrink-0 rounded-md border border-border-strong px-3 py-2 text-sm font-medium text-text hover:bg-background"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+        </template>
+    </section>
 
     {{-- Identifiers and links --}}
     <section class="border-t border-border pt-8">
@@ -253,7 +435,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 pb-12">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 
             {{-- DOI --}}
             <div>
@@ -344,3 +526,83 @@
     </section>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById(
+            'authors-container'
+        );
+
+        const addButton = document.getElementById(
+            'add-author'
+        );
+
+        const template = document.getElementById(
+            'author-row-template'
+        );
+
+        if (!container || !addButton || !template) {
+            return;
+        }
+
+        let index = {{ count($selectedPeople) }};
+
+        function updateAuthorOrder() {
+            const rows = container.querySelectorAll(
+                '.author-row'
+            );
+
+            rows.forEach(function (row, position) {
+                const order = position + 1;
+
+                row.querySelector('.author-order').textContent =
+                    order;
+
+                row.querySelector('.author-order-input').value =
+                    order;
+            });
+        }
+
+        addButton.addEventListener('click', function () {
+            const html = template.innerHTML
+                .replaceAll('__INDEX__', index)
+                .replaceAll('__ORDER__', index + 1);
+
+            container.insertAdjacentHTML(
+                'beforeend',
+                html
+            );
+
+            index++;
+
+            updateAuthorOrder();
+        });
+
+        container.addEventListener('click', function (event) {
+            const button = event.target.closest(
+                '.remove-author'
+            );
+
+            if (!button) {
+                return;
+            }
+
+            const rows = container.querySelectorAll(
+                '.author-row'
+            );
+
+            if (rows.length === 1) {
+                const row = button.closest('.author-row');
+
+                row.querySelector('select').value = '';
+                row.querySelector('.author-order-input').value = '';
+
+                return;
+            }
+
+            button.closest('.author-row').remove();
+
+            updateAuthorOrder();
+        });
+    });
+</script>

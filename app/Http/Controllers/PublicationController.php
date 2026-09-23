@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PublicationRequest;
+use App\Models\Person;
 use App\Models\Publication;
 use App\Services\PublicationService;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -39,13 +40,26 @@ class PublicationController extends Controller implements HasMiddleware
 
     public function create()
     {
-        return view('publications.create');
+        $people = Person::query()
+            ->orderBy('name')
+            ->get();
+
+        return view('publications.create', compact('people'));
     }
 
     public function store(PublicationRequest $request)
     {
-        $publication = $this->publicationService->create(
-            $request->validated()
+        $data = $request->validated();
+
+        $people = $data['people'] ?? [];
+
+        unset($data['people']);
+
+        $publication = $this->publicationService->create($data);
+
+        $this->publicationService->syncPeople(
+            $publication,
+            $people
         );
 
         return redirect()
@@ -59,7 +73,9 @@ class PublicationController extends Controller implements HasMiddleware
     public function show(Publication $publication)
     {
         $publication->load([
-            'people',
+            'people' => function ($query) {
+                $query->orderBy('publication_people.author_order');
+            },
             'researchProjects',
         ]);
 
@@ -68,21 +84,37 @@ class PublicationController extends Controller implements HasMiddleware
 
     public function edit(Publication $publication)
     {
+        $people = Person::query()
+            ->orderBy('name')
+            ->get();
+
         $publication->load([
             'people',
             'researchProjects',
         ]);
 
-        return view('publications.edit', compact('publication'));
+        return view('publications.edit', compact('publication', 'people'));
     }
 
     public function update(
         PublicationRequest $request,
         Publication $publication
     ) {
+
+        $data = $request->validated();
+
+        $people = $data['people'] ?? [];
+
+        unset($data['people']);
+
         $publication = $this->publicationService->update(
             $publication,
-            $request->validated()
+            $data
+        );
+
+        $this->publicationService->syncPeople(
+            $publication,
+            $people
         );
 
         return redirect()
