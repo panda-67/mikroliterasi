@@ -21,7 +21,7 @@
 
                 <a
                     href="{{ route('dashboard.research-areas.index') }}"
-                    class="group border border-border bg-card p-5 transition hover:border-text"
+                    class="block rounded-lg border border-border bg-surface p-5 transition hover:border-border-strong hover:bg-card"
                 >
                     <div class="flex items-start justify-between gap-4">
                         <div>
@@ -32,6 +32,31 @@
                             <p class="mt-2 text-sm leading-6 text-text-muted">
                                 Manage research taxonomy used to categorize research projects.
                             </p>
+                        </div>
+
+                        <span
+                            class="text-text-muted transition-transform group-hover:translate-x-1"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+                    </div>
+                </a>
+
+                <a
+                    href="{{ route('dashboard.research-projects.index') }}"
+                    class="block rounded-lg border border-border bg-surface p-5 transition hover:border-border-strong hover:bg-card"
+                >
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="font-semibold text-text">
+                                Research Projects
+                            </h2>
+
+                            <p class="mt-2 text-sm leading-6 text-text-muted">
+                                Manage research projects published on Mikroliterasi.
+                            </p>
+
                         </div>
 
                         <span

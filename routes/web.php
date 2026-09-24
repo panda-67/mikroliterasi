@@ -22,6 +22,11 @@ Route::resource('dashboard/research-areas', ResearchAreaController::class)
     ->except('show')
     ->names('dashboard.research-areas');
 
+Route::get('/dashboard/research-projects', [
+    ResearchProjectController::class,
+    'dashboardIndex',
+])->name('dashboard.research-projects.index');
+
 Route::resource('research-projects', ResearchProjectController::class);
 
 Route::delete(

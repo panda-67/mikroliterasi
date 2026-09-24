@@ -10,6 +10,7 @@ use App\Services\PersonService;
 use App\Services\ResearchProjectService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 
 class ResearchProjectController extends Controller implements HasMiddleware
 {
@@ -22,6 +23,7 @@ class ResearchProjectController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', only: [
+                'dashboardIndex',
                 'create',
                 'store',
                 'edit',
@@ -30,6 +32,15 @@ class ResearchProjectController extends Controller implements HasMiddleware
                 'removeFeaturedImage',
             ]),
         ];
+    }
+
+    public function dashboardIndex()
+    {
+        Gate::authorize('viewAny', ResearchProject::class);
+
+        $projects = $this->projectService->getAll(12);
+
+        return view('dashboard.research-projects.index', compact('projects'));
     }
 
     public function index()
@@ -52,6 +63,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function create()
     {
+        Gate::authorize('create', ResearchProject::class);
+
         $people = $this->personService->getActive();
 
         $researchAreas = ResearchArea::query()
@@ -71,6 +84,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function store(ResearchProjectRequest $request)
     {
+        Gate::authorize('create', ResearchProject::class);
+
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
@@ -98,6 +113,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function edit(ResearchProject $researchProject)
     {
+        Gate::authorize('update', $researchProject);
+
         $researchProject->load('people');
         $people = $this->personService->getActive();
 
@@ -119,6 +136,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function update(ResearchProjectRequest $request, ResearchProject $researchProject)
     {
+        Gate::authorize('update', $researchProject);
+
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
@@ -152,6 +171,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function destroy(ResearchProject $researchProject)
     {
+        Gate::authorize('delete', $researchProject);
+
         $this->projectService->delete($researchProject);
 
         return redirect()
@@ -161,6 +182,8 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
     public function removeFeaturedImage(ResearchProject $researchProject)
     {
+        Gate::authorize('update', $researchProject);
+
         $this->projectService->removeFeaturedImage($researchProject);
 
         return redirect()
