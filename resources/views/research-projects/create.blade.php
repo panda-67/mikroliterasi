@@ -8,7 +8,9 @@
 
     <div class="mb-8">
         <a
-            href="{{ route('research-projects.index') }}"
+            href="{{ $fromDashboard
+                ? route('dashboard.research-projects.index')
+                : route('research-projects.index') }}"
             class="text-sm text-text-muted hover:text-primary"
         >
             ← Research Projects
@@ -34,7 +36,9 @@
         <div class="mt-8 flex items-center justify-end gap-3 border-t border-border pt-6">
 
             <a
-                href="{{ route('research-projects.index') }}"
+                href="{{ $fromDashboard
+                    ? route('dashboard.research-projects.index')
+                    : route('research-projects.index') }}"
                 class="rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-text hover:bg-background"
             >
                 Cancel

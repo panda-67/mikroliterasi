@@ -11,7 +11,9 @@
 <div class="mx-auto w-full max-w-205 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
     <div class="mb-8">
         <a
-            href="{{ route('research-projects.show', $project) }}"
+            href="{{ $fromDashboard
+                ? route('dashboard.research-projects.index')
+                : route('research-projects.show', $project) }}"
             class="text-sm text-text-muted hover:text-primary"
         >
             ← Research Project
@@ -38,7 +40,9 @@
         <div class="mt-8 flex items-center justify-end gap-3 border-t border-border pt-6">
 
             <a
-                href="{{ route('research-projects.show', $project) }}"
+                href="{{ $fromDashboard
+                    ? route('dashboard.research-projects.index')
+                    : route('research-projects.show', $project) }}"
                 class="rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-text hover:bg-background"
             >
                 Cancel

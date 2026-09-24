@@ -41,7 +41,7 @@
 
         @can('create', \App\Models\ResearchProject::class)
             <a
-                href="{{ route('research-projects.create') }}"
+                href="{{ route('research-projects.create', ['fromDashboard' => 1]) }}"
                 class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-hover"
             >
                 New Project
@@ -49,23 +49,6 @@
         @endcan
 
     </div>
-
-    {{-- Flash message --}}
-    @if (session('success'))
-        <div
-            class="mb-6 rounded-md border border-success/30 bg-success/10 px-4 py-3 text-sm text-text"
-        >
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if (session('error'))
-        <div
-            class="mb-6 rounded-md border border-error/30 bg-error/10 px-4 py-3 text-sm text-text"
-        >
-            {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Projects --}}
     <div class="overflow-hidden rounded-lg border border-border bg-surface">
@@ -179,9 +162,11 @@
                                     <div class="flex justify-end gap-3">
 
                                         @can('update', $project)
-                                            <a
-                                                href="{{ route('research-projects.edit', $project) }}"
-                                                class="text-sm font-medium text-primary hover:underline"
+                                           <a
+                                                href="{{ route('research-projects.edit', [
+                                                    'research_project' => $project,
+                                                    'fromDashboard' => 1,
+                                                ]) }}"
                                             >
                                                 Edit
                                             </a>

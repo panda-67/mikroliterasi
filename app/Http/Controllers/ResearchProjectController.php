@@ -8,6 +8,7 @@ use App\Models\ResearchArea;
 use App\Models\ResearchProject;
 use App\Services\PersonService;
 use App\Services\ResearchProjectService;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
@@ -61,7 +62,7 @@ class ResearchProjectController extends Controller implements HasMiddleware
         return view('research-projects.show', compact('researchProject'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         Gate::authorize('create', ResearchProject::class);
 
@@ -75,10 +76,13 @@ class ResearchProjectController extends Controller implements HasMiddleware
             ->orderBy('title')
             ->get();
 
+        $fromDashboard = $request->boolean('fromDashboard');
+
         return view('research-projects.create', compact(
             'people',
             'researchAreas',
-            'publications'
+            'publications',
+            'fromDashboard',
         ));
     }
 
@@ -106,12 +110,18 @@ class ResearchProjectController extends Controller implements HasMiddleware
 
         $this->projectService->syncPublications($project, $publications);
 
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.research-projects.index')
+                ->with('success', 'Research project berhasil dibuat.');
+        }
+
         return redirect()
             ->route('research-projects.show', $project->slug)
             ->with('success', 'Research project berhasil dibuat.');
     }
 
-    public function edit(ResearchProject $researchProject)
+    public function edit(Request $request, ResearchProject $researchProject)
     {
         Gate::authorize('update', $researchProject);
 
@@ -126,11 +136,14 @@ class ResearchProjectController extends Controller implements HasMiddleware
             ->orderBy('title')
             ->get();
 
+        $fromDashboard = $request->boolean('fromDashboard');
+
         return view('research-projects.edit', compact(
             'researchProject',
             'people',
             'researchAreas',
-            'publications'
+            'publications',
+            'fromDashboard'
         ));
     }
 
@@ -163,6 +176,12 @@ class ResearchProjectController extends Controller implements HasMiddleware
             'researchAreas',
             'publications'
         ]);
+
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.research-projects.index')
+                ->with('success', 'Research project berhasil diperbarui.');
+        }
 
         return redirect()
             ->route('research-projects.show', $project->slug)
