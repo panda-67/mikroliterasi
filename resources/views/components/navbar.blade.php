@@ -12,6 +12,15 @@
         {{-- Desktop navigation --}}
         <nav class="hidden items-center gap-1 md:flex">
 
+            @auth
+                <x-nav-link
+                    href="{{ route('dashboard') }}"
+                    :active="request()->routeIs('dashboard.*')"
+                >
+                    Dashboard
+                </x-nav-link>
+            @endauth
+
             <x-nav-link
                 href="{{ route('research-projects.index') }}"
                 :active="request()->routeIs('research-projects.*')"
@@ -33,7 +42,7 @@
                 People
             </x-nav-link>
 
-<x-nav-link
+            <x-nav-link
                 href="{{ route('about') }}"
                 :active="request()->routeIs('about')"
             >
@@ -97,6 +106,14 @@
         data-mobile-menu
     >
         <nav class="mx-auto w-full max-w-300 px-4 py-3 sm:px-6">
+            @auth
+                <x-mobile-nav-link
+                    href="{{ route('dashboard') }}"
+                    :active="request()->routeIs('dashboard.*')"
+                >
+                    Dashboard
+                </x-mobile-nav-link>
+            @endauth
 
             <x-mobile-nav-link
                 href="{{ route('research-projects.index') }}"
