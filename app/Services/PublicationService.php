@@ -19,7 +19,12 @@ class PublicationService
 
     public function getAll(int $length = 12)
     {
-        return Publication::latest('year')
+        return Publication::query()
+            ->with([
+                'people',
+                'researchProjects',
+            ])
+            ->latest('year')
             ->latest('id')
             ->paginate($length);
     }

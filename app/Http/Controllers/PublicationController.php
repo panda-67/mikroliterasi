@@ -7,8 +7,10 @@ use App\Models\Person;
 use App\Models\Publication;
 use App\Models\ResearchProject;
 use App\Services\PublicationService;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 
 class PublicationController extends Controller implements HasMiddleware
 {
@@ -20,6 +22,7 @@ class PublicationController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('auth', only: [
+                'dashboardIndex',
                 'create',
                 'store',
                 'edit',
@@ -29,6 +32,15 @@ class PublicationController extends Controller implements HasMiddleware
         ];
     }
 
+    public function dashboardIndex()
+    {
+        Gate::authorize('viewAny', Publication::class);
+
+        $publications = $this->publicationService->getAll(12);
+
+        return view('dashboard.publications.index', compact('publications'));
+    }
+
     public function index()
     {
         $publications = $this->publicationService->getAll(12);
@@ -36,8 +48,10 @@ class PublicationController extends Controller implements HasMiddleware
         return view('publications.index', compact('publications'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        Gate::authorize('create', Publication::class);
+
         $researchProjects = ResearchProject::query()
             ->orderBy('title')
             ->get();
@@ -46,11 +60,19 @@ class PublicationController extends Controller implements HasMiddleware
             ->orderBy('name')
             ->get();
 
-        return view('publications.create', compact('people', 'researchProjects'));
+        $fromDashboard = $request->boolean('fromDashboard');
+
+        return view('publications.create', compact(
+            'people',
+            'researchProjects',
+            'fromDashboard'
+        ));
     }
 
     public function store(PublicationRequest $request)
     {
+        Gate::authorize('create', Publication::class);
+
         $data = $request->validated();
 
         $people = $data['people'] ?? [];
@@ -73,6 +95,12 @@ class PublicationController extends Controller implements HasMiddleware
             $researchProjects
         );
 
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.publications.index')
+                ->with('success', 'Publication berhasil dibuat.');
+        }
+
         return redirect()
             ->route('publications.show', $publication->slug)
             ->with(
@@ -93,8 +121,10 @@ class PublicationController extends Controller implements HasMiddleware
         return view('publications.show', compact('publication'));
     }
 
-    public function edit(Publication $publication)
+    public function edit(Request $request, Publication $publication)
     {
+        Gate::authorize('update', $publication);
+
         $people = Person::query()
             ->orderBy('name')
             ->get();
@@ -108,13 +138,22 @@ class PublicationController extends Controller implements HasMiddleware
             'researchProjects',
         ]);
 
-        return view('publications.edit', compact('publication', 'people', 'researchProjects'));
+        $fromDashboard = $request->boolean('fromDashboard');
+
+        return view('publications.edit', compact(
+            'publication',
+            'people',
+            'researchProjects',
+            'fromDashboard'
+        ));
     }
 
     public function update(
         PublicationRequest $request,
         Publication $publication
     ) {
+
+        Gate::authorize('update', $publication);
 
         $data = $request->validated();
 
@@ -141,6 +180,12 @@ class PublicationController extends Controller implements HasMiddleware
             $researchProjects
         );
 
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.publications.index')
+                ->with('success', 'Publication berhasil diperbarui.');
+        }
+
         return redirect()
             ->route('publications.show', $publication->slug)
             ->with(
@@ -149,9 +194,17 @@ class PublicationController extends Controller implements HasMiddleware
             );
     }
 
-    public function destroy(Publication $publication)
+    public function destroy(Request $request, Publication $publication)
     {
+        Gate::authorize('delete', $publication);
+
         $this->publicationService->delete($publication);
+
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.publications.index')
+                ->with('success', 'Publication berhasil dihapus.');
+        }
 
         return redirect()
             ->route('publications.index')

@@ -622,6 +622,11 @@
         </div>
     </section>
 
+    <input
+        type="hidden"
+        name="fromDashboard"
+        value="{{ $fromDashboard ? '1' : '0' }}"
+    >
 </div>
 
 <script>
