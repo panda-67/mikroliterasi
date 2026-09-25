@@ -43,6 +43,13 @@
             </x-nav-link>
 
             <x-nav-link
+                href="{{ route('teaching-materials.index') }}"
+                :active="request()->routeIs('teaching-materials.*')"
+            >
+                Teaching Materials
+            </x-nav-link>
+
+            <x-nav-link
                 href="{{ route('about') }}"
                 :active="request()->routeIs('about')"
             >
@@ -134,6 +141,13 @@
                 :active="request()->routeIs('people.*')"
             >
                 People
+            </x-mobile-nav-link>
+
+            <x-mobile-nav-link
+                href="{{ route('teaching-materials.index') }}"
+                :active="request()->routeIs('teaching-materials.*')"
+            >
+                Teaching Materials
             </x-mobile-nav-link>
 
             <x-mobile-nav-link

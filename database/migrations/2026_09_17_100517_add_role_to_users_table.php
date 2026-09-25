@@ -16,6 +16,7 @@ return new class extends Migration
                 'admin',
                 'editor',
                 'researcher',
+                'student',
             ])->default('researcher')->after('email');
         });
     }

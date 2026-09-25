@@ -5,6 +5,7 @@ use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ResearchAreaController;
 use App\Http\Controllers\ResearchProjectController;
+use App\Http\Controllers\TeachingMaterialController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,6 +37,23 @@ Route::get('/dashboard/people', [
     PersonController::class,
     'dashboardIndex'
 ])->name('dashboard.people.index');
+
+Route::prefix('dashboard')
+    ->name('dashboard.')
+    ->group(function () {
+        Route::get('/teaching-materials', [TeachingMaterialController::class, 'dashboardIndex',])
+            ->name('teaching-materials.index');
+
+        Route::resource('teaching-materials', TeachingMaterialController::class)
+            ->except(['index', 'show']);
+    });
+
+Route::controller(TeachingMaterialController::class)
+    ->name('teaching-materials.')
+    ->group(function () {
+        Route::get('/materi-ajar', 'index')->name('index');
+        Route::get('/materi-ajar/{teachingMaterial}', 'show')->name('show');
+    });
 
 Route::resource('research-projects', ResearchProjectController::class);
 

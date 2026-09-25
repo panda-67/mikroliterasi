@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,7 +26,19 @@ class DatabaseSeeder extends Seeder
                 PersonSeeder::class,
                 ResearchProjectSeeder::class,
                 PublicationSeeder::class,
+                TeachingMaterialSeeder::class,
             ]);
+
+            User::updateOrCreate(
+                ['email' => 'student@mikroliterasi.com'],
+                [
+                    'name' => 'Mikroliterasi Student',
+                    'role' => 'student',
+                    'password' => Hash::make(
+                        env('STUDENT_PASSWORD', 'student123')
+                    ),
+                ]
+            );
         }
     }
 }

@@ -77,6 +77,18 @@
                         </a>
                     @endcan
 
+                    @can('viewAny', App\Models\TeachingMaterial::class)
+                        <a
+                            href="{{ route('dashboard.teaching-materials.index') }}"
+                            class="block rounded-md px-3 py-2 text-sm font-medium transition
+                                {{ request()->routeIs('dashboard.teaching-materials.*')
+                                    ? 'bg-card text-text'
+                                    : 'text-text-muted hover:bg-card hover:text-text' }}"
+                        >
+                            Teaching Materials
+                        </a>
+                    @endcan
+
                 </nav>
 
             </div>
@@ -145,6 +157,17 @@
                         </a>
                     @endcan
 
+                    @can('viewAny', App\Models\TeachingMaterial::class)
+                        <a
+                            href="{{ route('dashboard.teaching-materials.index') }}"
+                            class="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium
+                                {{ request()->routeIs('dashboard.teaching-matereials.*')
+                                    ? 'bg-card text-text'
+                                    : 'text-text-muted hover:bg-card hover:text-text' }}"
+                        >
+                            Teaching Materials
+                        </a>
+                    @endcan
 
                 </nav>
             </div>

@@ -100,6 +100,25 @@
                 </a>
             @endcan
 
+            @can('viewAny', App\Models\TeachingMaterial::class)
+                <a
+                    href="{{ route('dashboard.teaching-materials.index') }}"
+                    class="rounded-lg border border-border bg-surface p-5 transition hover:bg-card"
+                >
+                    <p class="text-sm text-text-muted">
+                        Teaching Materials
+                    </p>
+
+                    <p class="mt-2 text-3xl font-semibold tracking-tight text-text">
+                        {{ $teachingMaterialCount }}
+                    </p>
+
+                    <p class="mt-3 text-xs text-text-muted">
+                        Manage teaching materials
+                    </p>
+                </a>
+            @endcan
+
         </div>
 
     </div>

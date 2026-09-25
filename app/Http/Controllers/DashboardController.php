@@ -6,6 +6,7 @@ use App\Models\Person;
 use App\Models\Publication;
 use App\Models\ResearchArea;
 use App\Models\ResearchProject;
+use App\Models\TeachingMaterial;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\View\View;
@@ -32,6 +33,7 @@ class DashboardController extends Controller implements HasMiddleware
             'researchProjectsCount' => ResearchProject::count(),
             'publicationsCount' => Publication::count(),
             'peopleCount' => Person::count(),
+            'teachingMaterialCount' => TeachingMaterial::count(),
         ]);
     }
 }
