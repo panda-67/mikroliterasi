@@ -188,11 +188,17 @@ class ResearchProjectController extends Controller implements HasMiddleware
             ->with('success', 'Research project berhasil diperbarui.');
     }
 
-    public function destroy(ResearchProject $researchProject)
+    public function destroy(Request $request, ResearchProject $researchProject)
     {
         Gate::authorize('delete', $researchProject);
 
         $this->projectService->delete($researchProject);
+
+        if ($request->boolean('fromDashboard')) {
+            return redirect()
+                ->route('dashboard.research-projects.index')
+                ->with('success', 'Research project berhasil dihapus.');
+        }
 
         return redirect()
             ->route('research-projects.index')

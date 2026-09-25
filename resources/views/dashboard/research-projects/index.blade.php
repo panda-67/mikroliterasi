@@ -41,7 +41,9 @@
 
         @can('create', \App\Models\ResearchProject::class)
             <a
-                href="{{ route('research-projects.create', ['fromDashboard' => 1]) }}"
+                href="{{ route('research-projects.create', [
+                    'fromDashboard' => 1,
+                ]) }}"
                 class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-hover"
             >
                 New Project
@@ -58,7 +60,9 @@
             <table class="w-full text-left text-sm">
 
                 <thead class="border-b border-border bg-card">
+
                     <tr>
+
                         <th class="px-4 py-3 font-medium text-text">
                             Project
                         </th>
@@ -80,7 +84,9 @@
                                 Actions
                             </th>
                         @endif
+
                     </tr>
+
                 </thead>
 
                 <tbody class="divide-y divide-border">
@@ -149,9 +155,7 @@
 
                             {{-- Updated --}}
                             <td class="px-4 py-4 whitespace-nowrap text-text-muted">
-
                                 {{ $project->updated_at?->format('d M Y') }}
-
                             </td>
 
                             {{-- Actions --}}
@@ -162,33 +166,80 @@
                                     <div class="flex justify-end gap-3">
 
                                         @can('update', $project)
-                                           <a
+
+                                            <a
                                                 href="{{ route('research-projects.edit', [
                                                     'research_project' => $project,
                                                     'fromDashboard' => 1,
                                                 ]) }}"
+                                                class="text-sm font-medium text-primary hover:underline"
                                             >
                                                 Edit
                                             </a>
+
                                         @endcan
 
                                         @can('delete', $project)
 
-                                            <form
-                                                action="{{ route('research-projects.destroy', $project) }}"
-                                                method="POST"
-                                                onsubmit="return confirm('Delete this research project?');"
+                                            <button
+                                                type="button"
+                                                class="text-sm font-medium text-error hover:underline"
+                                                onclick="document.getElementById('delete-project-{{ $project->id }}').showModal()"
                                             >
-                                                @csrf
-                                                @method('DELETE')
+                                                Delete
+                                            </button>
 
-                                                <button
-                                                    type="submit"
-                                                    class="text-sm font-medium text-error hover:underline"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </form>
+                                            <dialog
+                                                id="delete-project-{{ $project->id }}"
+                                                class="m-auto w-full max-w-md rounded-lg border border-border bg-surface p-0 shadow-xl"
+                                            >
+                                                <div class="p-6">
+
+                                                    <div class="mb-5">
+                                                        <h2 class="text-lg font-semibold text-text">
+                                                            Delete Research Project
+                                                        </h2>
+
+                                                        <p class="mt-2 text-sm leading-6 text-text-muted">
+                                                            Are you sure you want to delete
+                                                            <span class="font-medium text-text">
+                                                                {{ $project->title }}
+                                                            </span>?
+                                                            This action cannot be undone.
+                                                        </p>
+                                                    </div>
+
+                                                    <form
+                                                        action="{{ route('research-projects.destroy', $project) }}"
+                                                        method="POST"
+                                                    >
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <input type="hidden" name="fromDashboard" value="1" >
+
+                                                        <div class="flex justify-end gap-3">
+
+                                                            <button
+                                                                type="button"
+                                                                onclick="document.getElementById('delete-project-{{ $project->id }}').close()"
+                                                                class="rounded-md border border-border px-4 py-2 text-sm font-medium text-text transition hover:bg-card"
+                                                            >
+                                                                Cancel
+                                                            </button>
+
+                                                            <button
+                                                                type="submit"
+                                                                class="rounded-md bg-error px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                                                            >
+                                                                Delete Project
+                                                            </button>
+
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </dialog>
 
                                         @endcan
 
@@ -203,23 +254,31 @@
                     @empty
 
                         <tr>
+
                             <td
                                 colspan="{{ auth()->user()->role === 'admin' ? 5 : 4 }}"
                                 class="px-4 py-12 text-center"
                             >
+
                                 <p class="text-sm text-text-muted">
                                     No research projects found.
                                 </p>
 
                                 @can('create', \App\Models\ResearchProject::class)
+
                                     <a
-                                        href="{{ route('research-projects.create') }}"
+                                        href="{{ route('research-projects.create', [
+                                            'fromDashboard' => 1,
+                                        ]) }}"
                                         class="mt-3 inline-block text-sm font-medium text-primary hover:underline"
                                     >
                                         Create the first research project
                                     </a>
+
                                 @endcan
+
                             </td>
+
                         </tr>
 
                     @endforelse
