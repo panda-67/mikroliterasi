@@ -19,7 +19,7 @@ Route::get('/dashboard', DashboardController::class)
     ->name('dashboard.index');
 
 Route::resource('dashboard/research-areas', ResearchAreaController::class)
-    ->except('show')
+    ->except('create', 'show', 'edit')
     ->names('dashboard.research-areas');
 
 Route::get('/dashboard/research-projects', [

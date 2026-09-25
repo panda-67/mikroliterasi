@@ -40,16 +40,6 @@ class ResearchAreaController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for creating a new research area.
-     */
-    public function create(): View
-    {
-        Gate::authorize('create', ResearchArea::class);
-
-        return view('dashboard.research-areas.create');
-    }
-
-    /**
      * Store a newly created research area.
      */
     public function store(Request $request): RedirectResponse
@@ -58,7 +48,6 @@ class ResearchAreaController extends Controller implements HasMiddleware
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:research_areas,slug'],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -67,19 +56,6 @@ class ResearchAreaController extends Controller implements HasMiddleware
         return redirect()
             ->route('dashboard.research-areas.index')
             ->with('success', 'Research area created successfully.');
-    }
-
-    /**
-     * Show the form for editing the specified research area.
-     */
-    public function edit(ResearchArea $researchArea): View
-    {
-        Gate::authorize('update', $researchArea);
-
-        return view(
-            'dashboard.research-areas.edit',
-            compact('researchArea')
-        );
     }
 
     /**
@@ -93,13 +69,6 @@ class ResearchAreaController extends Controller implements HasMiddleware
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('research_areas', 'slug')
-                    ->ignore($researchArea->id),
-            ],
             'description' => ['nullable', 'string'],
         ]);
 

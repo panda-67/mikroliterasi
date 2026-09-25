@@ -40,12 +40,13 @@
             </div>
 
             @can('create', App\Models\ResearchArea::class)
-                <a
-                    href="{{ route('dashboard.research-areas.create') }}"
+                <button
+                    type="button"
+                    onclick="document.getElementById('create-research-area').showModal()"
                     class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90"
                 >
                     New Research Area
-                </a>
+                </button>
             @endcan
 
         </div>
@@ -112,13 +113,14 @@
                                     <div class="flex justify-end gap-3">
 
                                         @can('update', $researchArea)
-                                            <a
-                                                href="{{ route('dashboard.research-areas.edit', $researchArea) }}"
-                                                class="text-sm font-medium text-primary hover:underline"
+                                            <button
+                                                type="button"
+                                                onclick="document.getElementById('edit-research-area-{{ $researchArea->id }}').showModal()"
+                                                class="text-sm font-medium text-text transition hover:underline"
                                             >
                                                 Edit
-                                            </a>
-                                        @endcan
+                                            </button>
+                                       @endcan
 
                                         @can('delete', $researchArea)
                                             @if ($researchArea->research_projects_count === 0)
@@ -139,6 +141,41 @@
                             @endif
 
                         </tr>
+
+                        {{-- Modal Edit --}}
+                        <dialog
+                            id="edit-research-area-{{ $researchArea->id }}"
+                            class="m-auto w-full max-w-lg rounded-lg border border-border bg-surface p-0 shadow-xl backdrop:bg-black/40"
+                        >
+                            <div class="p-5 sm:p-6">
+
+                                <div class="mb-6">
+                                    <h2 class="text-lg font-semibold text-text">
+                                        Edit Research Area
+                                    </h2>
+
+                                    <p class="mt-1 text-sm leading-6 text-text-muted">
+                                        Update the research area information.
+                                    </p>
+                                </div>
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('dashboard.research-areas.update', $researchArea) }}"
+                                >
+                                    @method('PUT')
+
+                                    @include('dashboard.research-areas._form', [
+                                        'researchArea' => $researchArea,
+                                        'nameInputId' => 'edit-research-area-' . $researchArea->id . '-name',
+                                        'descriptionInputId' => 'edit-research-area-' . $researchArea->id . '-description',
+                                        'modalId' => 'edit-research-area-' . $researchArea->id,
+                                        'submitLabel' => 'Save Changes',
+                                    ])
+                                </form>
+
+                            </div>
+                        </dialog>
 
                         @can('delete', $researchArea)
 
@@ -233,6 +270,39 @@
             </table>
 
         </div>
+
+        {{-- Modal Create --}}
+        <dialog
+            id="create-research-area"
+            class="m-auto w-full max-w-lg rounded-lg border border-border bg-surface p-0 shadow-xl backdrop:bg-black/40"
+        >
+            <div class="p-5 sm:p-6">
+
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-text">
+                        New Research Area
+                    </h2>
+
+                    <p class="mt-1 text-sm leading-6 text-text-muted">
+                        Add a research area used to categorize research projects.
+                    </p>
+                </div>
+
+                <form
+                    method="POST"
+                    action="{{ route('dashboard.research-areas.store') }}"
+                >
+                    @include('dashboard.research-areas._form', [
+                        'researchArea' => null,
+                        'nameInputId' => 'create-research-area-name',
+                        'descriptionInputId' => 'create-research-area-description',
+                        'modalId' => 'create-research-area',
+                        'submitLabel' => 'Create Research Area',
+                    ])
+                </form>
+
+            </div>
+        </dialog>
 
     </div>
 
