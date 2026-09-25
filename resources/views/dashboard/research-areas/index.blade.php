@@ -171,6 +171,7 @@
                                         'descriptionInputId' => 'edit-research-area-' . $researchArea->id . '-description',
                                         'modalId' => 'edit-research-area-' . $researchArea->id,
                                         'submitLabel' => 'Save Changes',
+                                        'isActiveModal' => session('open_modal') === 'edit-research-area-' . $researchArea->id,
                                     ])
                                 </form>
 
@@ -298,6 +299,7 @@
                         'descriptionInputId' => 'create-research-area-description',
                         'modalId' => 'create-research-area',
                         'submitLabel' => 'Create Research Area',
+                        'isActiveModal' => session('open_modal') === 'create-research-area',
                     ])
                 </form>
 
@@ -313,5 +315,19 @@
     @endif
 
 </div>
+
+@if (session('open_modal'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById(
+                @js(session('open_modal'))
+            );
+
+            if (modal) {
+                modal.showModal();
+            }
+        });
+    </script>
+@endif
 
 @endsection

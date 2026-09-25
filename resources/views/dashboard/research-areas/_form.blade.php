@@ -15,17 +15,20 @@
             id="{{ $nameInputId }}"
             name="name"
             type="text"
-            value="{{ old('name', $researchArea?->name ?? '') }}"
-            required
+            value="{{ $isActiveModal
+                ? old('name', $researchArea?->name ?? '')
+                : ($researchArea?->name ?? '') }}"
             autofocus
             class="mt-2 block w-full border border-border bg-background px-3 py-2.5 text-sm text-text outline-none transition focus:border-text"
         >
 
-        @error('name')
-            <p class="mt-2 text-sm text-error">
-                {{ $message }}
-            </p>
-        @enderror
+        @if ($isActiveModal)
+            @error('name')
+                <p class="mt-2 text-sm text-error">
+                    {{ $message }}
+                </p>
+            @enderror
+        @endif
     </div>
 
     {{-- Description --}}
@@ -42,13 +45,17 @@
             name="description"
             rows="4"
             class="mt-2 block w-full resize-y border border-border bg-background px-3 py-2.5 text-sm leading-6 text-text outline-none transition focus:border-text"
-        >{{ old('description', $researchArea?->description ?? '') }}</textarea>
+        >{{ $isActiveModal
+            ? old('description', $researchArea?->description ?? '')
+            : ($researchArea?->description ?? '') }}</textarea>
 
-        @error('description')
-            <p class="mt-2 text-sm text-error">
-                {{ $message }}
-            </p>
-        @enderror
+        @if ($isActiveModal)
+            @error('description')
+                <p class="mt-2 text-sm text-error">
+                    {{ $message }}
+                </p>
+            @enderror
+        @endif
     </div>
 
 </div>

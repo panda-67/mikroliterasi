@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 
@@ -46,12 +47,22 @@ class ResearchAreaController extends Controller implements HasMiddleware
     {
         Gate::authorize('create', ResearchArea::class);
 
-        $data = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
         ]);
 
-        $this->researchAreaService->create($data);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('dashboard.research-areas.index')
+                ->withErrors($validator)
+                ->withInput()
+                ->with('open_modal', 'create-research-area');
+        }
+
+        $this->researchAreaService->create(
+            $validator->validated()
+        );
 
         return redirect()
             ->route('dashboard.research-areas.index')
@@ -67,12 +78,26 @@ class ResearchAreaController extends Controller implements HasMiddleware
     ): RedirectResponse {
         Gate::authorize('update', $researchArea);
 
-        $data = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
         ]);
 
-        $this->researchAreaService->update($researchArea, $data);
+        if ($validator->fails()) {
+            return redirect()
+                ->route('dashboard.research-areas.index')
+                ->withErrors($validator)
+                ->withInput()
+                ->with(
+                    'open_modal',
+                    'edit-research-area-' . $researchArea->id
+                );
+        }
+
+        $this->researchAreaService->update(
+            $researchArea,
+            $validator->validated()
+        );
 
         return redirect()
             ->route('dashboard.research-areas.index')
