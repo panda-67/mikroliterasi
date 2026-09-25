@@ -10,7 +10,7 @@
         <div class="mb-8">
             <nav class="mb-3 text-sm text-text-muted" aria-label="Breadcrumb">
                 <a
-                    href="{{ route('dashboard') }}"
+                    href="{{ route('dashboard.index') }}"
                     class="transition hover:text-text"
                 >
                     Dashboard

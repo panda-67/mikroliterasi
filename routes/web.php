@@ -16,7 +16,7 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/dashboard', DashboardController::class)
-    ->name('dashboard');
+    ->name('dashboard.index');
 
 Route::resource('dashboard/research-areas', ResearchAreaController::class)
     ->except('show')

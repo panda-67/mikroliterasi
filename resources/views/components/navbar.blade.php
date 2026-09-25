@@ -14,7 +14,7 @@
 
             @auth
                 <x-nav-link
-                    href="{{ route('dashboard') }}"
+                    href="{{ route('dashboard.index') }}"
                     :active="request()->routeIs('dashboard.*')"
                 >
                     Dashboard
@@ -108,7 +108,7 @@
         <nav class="mx-auto w-full max-w-300 px-4 py-3 sm:px-6">
             @auth
                 <x-mobile-nav-link
-                    href="{{ route('dashboard') }}"
+                    href="{{ route('dashboard.index') }}"
                     :active="request()->routeIs('dashboard.*')"
                 >
                     Dashboard
