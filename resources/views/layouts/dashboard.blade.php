@@ -65,6 +65,18 @@
                         </a>
                     @endcan
 
+                    @can('viewAny', App\Models\Person::class)
+                        <a
+                            href="{{ route('dashboard.people.index') }}"
+                            class="block rounded-md px-3 py-2 text-sm font-medium transition
+                                {{ request()->routeIs('dashboard.people.*')
+                                    ? 'bg-card text-text'
+                                    : 'text-text-muted hover:bg-card hover:text-text' }}"
+                        >
+                            People
+                        </a>
+                    @endcan
+
                 </nav>
 
             </div>
@@ -120,6 +132,19 @@
                             Publications
                         </a>
                     @endcan
+
+                    @can('viewAny', App\Models\Person::class)
+                        <a
+                            href="{{ route('dashboard.people.index') }}"
+                            class="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium
+                                {{ request()->routeIs('dashboard.people.*')
+                                    ? 'bg-card text-text'
+                                    : 'text-text-muted hover:bg-card hover:text-text' }}"
+                        >
+                            People
+                        </a>
+                    @endcan
+
 
                 </nav>
             </div>

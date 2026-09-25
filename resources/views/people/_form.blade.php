@@ -389,16 +389,26 @@
                 </p>
             @enderror
         </div>
-    </section>
 
+        <input
+            type="hidden"
+            name="fromDashboard"
+            value="{{ $fromDashboard ? '1' : '0' }}"
+        >
+
+    </section>
 
     {{-- Actions --}}
     <div class="flex items-center justify-end gap-3 border-t border-border pt-8">
 
         <a
             href="{{ isset($person)
-                ? route('people.show', $person->slug)
-                : route('people.index') }}"
+                ? ($fromDashboard
+                    ? route('dashboard.people.index')
+                    : route('people.show', $people->slug))
+                : ($fromDashboard
+                    ? route('dashboard.people.index')
+                    : route('people.index')) }}"
             class="rounded-md border border-border-strong px-4 py-2 text-sm font-medium text-text hover:bg-background"
         >
             Cancel

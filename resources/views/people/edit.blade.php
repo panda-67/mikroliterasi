@@ -8,7 +8,9 @@
 
     <div class="mb-8">
         <a
-            href="{{ route('people.show', $person->slug) }}"
+            href="{{ $fromDashboard
+                ? route('dashboard.people.index')
+                : route('people.show', $person->slug) }}"
             class="text-sm text-text-muted hover:text-primary"
         >
             ← {{ $person->name }}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Person;
 use App\Models\Publication;
 use App\Models\ResearchArea;
 use App\Models\ResearchProject;
@@ -30,6 +31,7 @@ class DashboardController extends Controller implements HasMiddleware
             'researchAreasCount' => ResearchArea::count(),
             'researchProjectsCount' => ResearchProject::count(),
             'publicationsCount' => Publication::count(),
+            'peopleCount' => Person::count(),
         ]);
     }
 }

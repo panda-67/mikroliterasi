@@ -32,6 +32,11 @@ Route::get('/dashboard/publications', [
     'dashboardIndex'
 ])->name('dashboard.publications.index');
 
+Route::get('/dashboard/people', [
+    PersonController::class,
+    'dashboardIndex'
+])->name('dashboard.people.index');
+
 Route::resource('research-projects', ResearchProjectController::class);
 
 Route::delete(

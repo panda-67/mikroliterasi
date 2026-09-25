@@ -10,7 +10,6 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use Illuminate\Validation\Rule;
 
 class ResearchAreaController extends Controller implements HasMiddleware
 {

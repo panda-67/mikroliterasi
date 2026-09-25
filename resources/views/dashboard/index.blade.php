@@ -81,6 +81,25 @@
                 </a>
             @endcan
 
+            @can('viewAny', App\Models\Person::class)
+                <a
+                    href="{{ route('dashboard.people.index') }}"
+                    class="rounded-lg border border-border bg-surface p-5 transition hover:bg-card"
+                >
+                    <p class="text-sm text-text-muted">
+                        People
+                    </p>
+
+                    <p class="mt-2 text-3xl font-semibold tracking-tight text-text">
+                        {{ $peopleCount }}
+                    </p>
+
+                    <p class="mt-3 text-xs text-text-muted">
+                        Manage people
+                    </p>
+                </a>
+            @endcan
+
         </div>
 
     </div>
