@@ -81,7 +81,13 @@
 
                         <p class="text-sm leading-6 text-text-muted">
                             The presentation is available to authorized users.
-                            Please sign in with an account that has access.
+                            <a
+                                href="{{ route('login') }}"
+                                class="font-medium text-primary hover:underline"
+                            >
+                                Log in
+                            </a>
+                            with an account that has access.
                         </p>
 
                     @endcan

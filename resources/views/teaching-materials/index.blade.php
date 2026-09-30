@@ -55,16 +55,12 @@
 
                     <div class="shrink-0">
 
-                        @can('viewPpt', $teachingMaterial)
-                            <a
-                                href="{{ $teachingMaterial->ppt_url }}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-hover"
-                            >
-                                View Presentation
-                            </a>
-                        @endcan
+                        <a
+                            href="{{ route('teaching-materials.show', $teachingMaterial) }}"
+                            class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-hover"
+                        >
+                            View
+                        </a>
 
                     </div>
 

@@ -17,11 +17,7 @@
     <title>
         @yield('title', config('app.name', 'Mikroliterasi'))
     </title>
-
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js',
-    ])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="flex min-h-screen flex-col bg-background text-text">

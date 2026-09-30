@@ -88,10 +88,11 @@
                     <tr class="align-top">
 
                         <td class="px-4 py-4">
-
-                            <div class="font-medium text-text">
-                                {{ $teachingMaterial->title }}
-                            </div>
+                            <a href="{{ route('teaching-materials.show', $teachingMaterial) }}">
+                                <div class="font-medium text-text">
+                                    {{ $teachingMaterial->title }}
+                                </div>
+                            </a>
 
                             @if ($teachingMaterial->description)
                                 <p class="mt-1 max-w-2xl text-xs leading-5 text-text-muted">

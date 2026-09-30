@@ -14,27 +14,12 @@
             aria-label="Breadcrumb"
         >
             <a
-                href="{{ route('dashboard.index') }}"
-                class="transition hover:text-text"
-            >
-                Dashboard
-            </a>
-
-            <span class="mx-2" aria-hidden="true">/</span>
-
-            <a
                 href="{{ route('dashboard.teaching-materials.index') }}"
-                class="transition hover:text-text"
+                class="text-sm text-text-muted hover:text-primary"
             >
-                Teaching Materials
+                ← Teaching Materials
             </a>
-
-            <span class="mx-2" aria-hidden="true">/</span>
-
-            <span class="text-text">
-                Edit
-            </span>
-        </nav>
+       </nav>
 
         <div>
             <h1 class="text-2xl font-semibold tracking-tight text-text sm:text-3xl">
