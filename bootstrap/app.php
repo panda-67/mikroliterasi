@@ -24,8 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $publicPath = realpath(base_path('/../public_html'));
 
             if ($publicPath !== false) {
-                $app->usePublicPath($publicPath);
+                $app->usePublicPath($publicPath . DIRECTORY_SEPARATOR);
             }
         }
-    })
-    ->create();
+    })->create();
