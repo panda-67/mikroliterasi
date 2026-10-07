@@ -41,6 +41,18 @@
                         </a>
                     @endcan
 
+                    @can('viewAny', App\Models\Post::class)
+                        <a
+                            href="{{ route('dashboard.posts.index') }}"
+                            class="block rounded-md px-3 py-2 text-sm font-medium transition
+                                {{ request()->routeIs('dashboard.posts.*')
+                                    ? 'bg-card text-text'
+                                    : 'text-text-muted hover:bg-card hover:text-text' }}"
+                        >
+                            Posts
+                        </a>
+                    @endcan
+
                     @can('viewAny', App\Models\ResearchProject::class)
                         <a
                             href="{{ route('dashboard.research-projects.index') }}"

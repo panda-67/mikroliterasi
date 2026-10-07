@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\ResearchAreaController;
 use App\Http\Controllers\ResearchProjectController;
@@ -37,6 +38,26 @@ Route::get('/dashboard/people', [
     PersonController::class,
     'dashboardIndex'
 ])->name('dashboard.people.index');
+
+Route::prefix('dashboard')
+    ->name('dashboard.')
+    ->group(function () {
+        Route::get('/posts', [PostController::class, 'dashboardIndex'])
+            ->name('posts.index');
+
+        Route::resource('posts', PostController::class)
+            ->except(['index', 'show']);
+    });
+
+Route::controller(PostController::class)
+    ->name('posts.')
+    ->group(function () {
+        Route::get('/posts', 'index')
+            ->name('index');
+
+        Route::get('/posts/{post}', 'show')
+            ->name('show');
+    });
 
 Route::prefix('dashboard')
     ->name('dashboard.')

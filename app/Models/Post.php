@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -30,6 +32,22 @@ class Post extends Model
         return [
             'published_at' => 'datetime',
         ];
+    }
+
+    protected function featuredImageUrl(): Attribute
+    {
+        return Attribute::get(
+            fn() => $this->featured_image
+                ? Storage::disk('public')->url(
+                    $this->featured_image
+                )
+                : null
+        );
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 
     public function author(): BelongsTo

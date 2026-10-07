@@ -22,6 +22,13 @@
             @endauth
 
             <x-nav-link
+                href="{{ route('posts.index') }}"
+                :active="request()->routeIs('posts.*')"
+            >
+                Posts
+            </x-nav-link>
+
+            <x-nav-link
                 href="{{ route('research-projects.index') }}"
                 :active="request()->routeIs('research-projects.*')"
             >
@@ -121,6 +128,13 @@
                     Dashboard
                 </x-mobile-nav-link>
             @endauth
+
+            <x-mobile-nav-link
+                href="{{ route('posts.index') }}"
+                :active="request()->routeIs('posts.*')"
+            >
+                Posts
+            </x-mobile-nav-link>
 
             <x-mobile-nav-link
                 href="{{ route('research-projects.index') }}"

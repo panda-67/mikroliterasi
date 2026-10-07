@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
                 ResearchProjectSeeder::class,
                 PublicationSeeder::class,
                 TeachingMaterialSeeder::class,
+                PostSeeder::class,
             ]);
 
             User::updateOrCreate(
