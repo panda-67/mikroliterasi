@@ -191,7 +191,7 @@
                             </h2>
 
                             <div class="mt-5 text-sm leading-7 text-text">
-                                {!! nl2br(e($publication->abstract)) !!}
+                                {!! $publication->abstract !!}
                             </div>
 
                         </section>

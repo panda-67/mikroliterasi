@@ -55,7 +55,7 @@
             {{-- Short description --}}
             @if ($project->short_description)
                 <p class="mt-5 max-w-3xl text-lg leading-8 text-text-muted">
-                    {{ $project->short_description }}
+                    {!! $project->short_description !!}
                 </p>
             @endif
 
@@ -129,7 +129,7 @@
                             </h2>
 
                             <div class="mt-5 text-base leading-8 text-text">
-                                {!! nl2br(e($project->description)) !!}
+                                {!! $project->description !!}
                             </div>
 
                         </article>

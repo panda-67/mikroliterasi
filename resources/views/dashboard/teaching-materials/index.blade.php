@@ -96,7 +96,7 @@
 
                             @if ($teachingMaterial->description)
                                 <p class="mt-1 max-w-2xl text-xs leading-5 text-text-muted">
-                                    {{ $teachingMaterial->description }}
+                                    {!! $teachingMaterial->description !!}
                                 </p>
                             @endif
 

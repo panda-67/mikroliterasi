@@ -35,7 +35,7 @@
 
                 @if ($teachingMaterial->description)
                     <p class="mt-4 text-base leading-7 text-text-muted">
-                        {{ $teachingMaterial->description }}
+                        {!! $teachingMaterial->description !!}
                     </p>
                 @endif
 

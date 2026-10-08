@@ -49,12 +49,14 @@
                     Description
                 </label>
 
-                <textarea
+                <x-quill-editor
                     name="description"
-                    id="description"
-                    rows="6"
-                    class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >{{ old('description', $teachingMaterial->description ?? '') }}</textarea>
+                    :value="$teachingMaterial->description ?? ''"
+                    toolbar="basic"
+                    placeholder="Description here..."
+                    height="300px"
+                    class="mt-2"
+                />
 
                 @error('description')
                     <p class="mt-1 text-sm text-error">

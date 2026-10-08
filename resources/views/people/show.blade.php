@@ -41,7 +41,7 @@
             {{-- Short bio --}}
             @if ($person->short_bio)
                 <p class="mt-5 max-w-3xl text-lg leading-8 text-text-muted">
-                    {{ $person->short_bio }}
+                    {!! $person->short_bio !!}
                 </p>
             @endif
 
@@ -137,7 +137,7 @@
                             </h2>
 
                             <div class="mt-6 text-sm leading-7 text-text">
-                                {!! nl2br(e($person->bio)) !!}
+                                {!! $person->bio !!}
                             </div>
 
                         </section>
@@ -153,7 +153,7 @@
                             </h2>
 
                             <div class="mt-5 text-sm leading-7 text-text">
-                                {!! nl2br(e($person->education)) !!}
+                                {!! $person->education !!}
                             </div>
 
                         </section>
@@ -169,7 +169,7 @@
                             </h2>
 
                             <div class="mt-5 text-sm leading-7 text-text">
-                                {!! nl2br(e($person->research_interests)) !!}
+                                {!! $person->research_interests !!}
                             </div>
 
                         </section>

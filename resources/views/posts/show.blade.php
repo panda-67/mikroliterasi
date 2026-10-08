@@ -127,7 +127,7 @@
                 <article class="{{ $post->featured_image ? 'mt-8' : '' }} max-w-3xl">
 
                     <div class="text-base leading-8 text-text">
-                        {!! nl2br(e($post->content)) !!}
+                        {!! $post->content !!}
                     </div>
 
                 </article>

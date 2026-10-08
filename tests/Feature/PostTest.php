@@ -152,7 +152,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Elephant Corridor Research Update',
                 'excerpt' => 'Research update.',
                 'content' => 'Research content.',
@@ -163,7 +163,7 @@ class PostTest extends TestCase
                 'research_project_id' => null,
             ]);
 
-        $response->assertRedirect(route('posts.index'));
+        $response->assertRedirect(route('dashboard.posts.index'));
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Elephant Corridor Research Update',
@@ -181,7 +181,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Field Activity Update',
                 'excerpt' => 'Field activity.',
                 'content' => 'Field activity content.',
@@ -189,7 +189,7 @@ class PostTest extends TestCase
                 'status' => 'draft',
             ]);
 
-        $response->assertRedirect(route('posts.index'));
+        $response->assertRedirect(route('dashboard.posts.index'));
 
         $this->assertDatabaseHas('posts', [
             'title' => 'Field Activity Update',
@@ -205,7 +205,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Unauthorized Post',
                 'content' => 'Content.',
                 'category' => 'announcement',
@@ -221,7 +221,7 @@ class PostTest extends TestCase
 
     public function test_guest_cannot_create_post(): void
     {
-        $response = $this->post(route('posts.store'), [
+        $response = $this->post(route('dashboard.posts.store'), [
             'title' => 'Unauthorized Post',
             'content' => 'Content.',
             'category' => 'announcement',
@@ -251,7 +251,7 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'My Research Activity',
                 'content' => 'Content.',
                 'category' => 'research_update',
@@ -278,11 +278,11 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->post(route('posts.store'), $data);
+            ->post(route('dashboard.posts.store'), $data);
 
         $this
             ->actingAs($user)
-            ->post(route('posts.store'), $data);
+            ->post(route('dashboard.posts.store'), $data);
 
         $this->assertDatabaseHas('posts', [
             'slug' => 'research-update',
@@ -309,7 +309,7 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Published Research',
                 'content' => 'Content.',
                 'category' => 'publication',
@@ -335,7 +335,7 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Historical Publication',
                 'content' => 'Content.',
                 'category' => 'publication',
@@ -370,14 +370,14 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->put(route('posts.update', $post), [
+            ->put(route('dashboard.posts.update', $post), [
                 'title' => 'Updated Post Title',
                 'content' => 'Updated content.',
                 'category' => 'announcement',
                 'status' => 'published',
             ]);
 
-        $response->assertRedirect(route('posts.index'));
+        $response->assertRedirect(route('dashboard.posts.index'));
 
         $post->refresh();
 
@@ -416,14 +416,14 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->put(route('posts.update', $post), [
+            ->put(route('dashboard.posts.update', $post), [
                 'title' => 'Editor Updated Post',
                 'content' => 'Updated content.',
                 'category' => 'research_update',
                 'status' => 'draft',
             ]);
 
-        $response->assertRedirect(route('posts.index'));
+        $response->assertRedirect(route('dashboard.posts.index'));
 
         $this->assertDatabaseHas('posts', [
             'id' => $post->id,
@@ -441,7 +441,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->put(route('posts.update', $post), [
+            ->put(route('dashboard.posts.update', $post), [
                 'title' => 'Unauthorized Update',
                 'content' => 'Updated.',
                 'category' => 'announcement',
@@ -467,7 +467,7 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($user)
-            ->put(route('posts.update', $post), [
+            ->put(route('dashboard.posts.update', $post), [
                 'title' => 'Completely Different Title',
                 'slug' => 'malicious-new-slug',
                 'content' => 'Updated content.',
@@ -504,7 +504,7 @@ class PostTest extends TestCase
 
         $this
             ->actingAs($attacker)
-            ->put(route('posts.update', $post), [
+            ->put(route('dashboard.posts.update', $post), [
                 'title' => $post->title,
                 'content' => $post->content,
                 'category' => $post->category,
@@ -536,9 +536,9 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('posts.destroy', $post));
+            ->delete(route('dashboard.posts.destroy', $post));
 
-        $response->assertRedirect(route('posts.index'));
+        $response->assertRedirect(route('dashboard.posts.index'));
 
         $this->assertDatabaseMissing('posts', [
             'id' => $post->id,
@@ -555,7 +555,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('posts.destroy', $post));
+            ->delete(route('dashboard.posts.destroy', $post));
 
         $response->assertForbidden();
 
@@ -574,7 +574,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->delete(route('posts.destroy', $post));
+            ->delete(route('dashboard.posts.destroy', $post));
 
         $response->assertForbidden();
 
@@ -597,7 +597,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'content' => 'Content.',
                 'category' => 'announcement',
                 'status' => 'draft',
@@ -614,7 +614,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Test Post',
                 'category' => 'announcement',
                 'status' => 'draft',
@@ -631,7 +631,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Test Post',
                 'content' => 'Content.',
                 'category' => 'invalid_category',
@@ -649,7 +649,7 @@ class PostTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->post(route('posts.store'), [
+            ->post(route('dashboard.posts.store'), [
                 'title' => 'Test Post',
                 'content' => 'Content.',
                 'category' => 'announcement',

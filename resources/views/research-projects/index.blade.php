@@ -81,7 +81,7 @@
 
                                     @if ($project->short_description)
                                         <p class="mt-3 line-clamp-3 text-sm leading-6 text-text-muted">
-                                            {{ $project->short_description }}
+                                            {!! $project->short_description !!}
                                         </p>
                                     @endif
 

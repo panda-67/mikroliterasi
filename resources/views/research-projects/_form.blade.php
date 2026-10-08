@@ -49,12 +49,14 @@
             Short Description
         </label>
 
-        <textarea
-            id="short_description"
+        <x-quill-editor
             name="short_description"
-            rows="3"
-            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        >{{ old('short_description', $project->short_description ?? '') }}</textarea>
+            :value="$project->short_description ?? ''"
+            toolbar="basic"
+            placeholder="Short description here..."
+            height="180px"
+            class="mt-2"
+        />
 
         @error('short_description')
             <p class="mt-1.5 text-sm text-error">{{ $message }}</p>
@@ -70,12 +72,14 @@
             Description
         </label>
 
-        <textarea
-            id="description"
+        <x-quill-editor
             name="description"
-            rows="8"
-            class="w-full rounded-md border border-border bg-background px-3 py-2.5 text-text placeholder:text-text-subtle focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-        >{{ old('description', $project->description ?? '') }}</textarea>
+            :value="$project->description ?? ''"
+            toolbar="basic"
+            placeholder="Description here..."
+            height="300px"
+            class="mt-2"
+        />
 
         @error('description')
             <p class="mt-1.5 text-sm text-error">{{ $message }}</p>

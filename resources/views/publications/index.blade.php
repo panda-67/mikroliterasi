@@ -78,7 +78,7 @@
 
                                     @if ($publication->abstract)
                                         <p class="mt-3 line-clamp-2 text-sm leading-6 text-text-muted">
-                                            {{ $publication->abstract }}
+                                            {!! $publication->abstract !!}
                                         </p>
                                     @endif
 

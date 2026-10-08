@@ -51,7 +51,7 @@
 
                             @if ($teachingMaterial->description)
                                 <p class="mt-2 text-sm leading-6 text-text-muted">
-                                    {{ $teachingMaterial->description }}
+                                    {!! $teachingMaterial->description !!}
                                 </p>
                             @endif
 

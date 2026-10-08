@@ -65,7 +65,7 @@
 
                             @if ($person->short_bio)
                                 <p class="mt-3 max-w-3xl text-sm leading-6 text-text-muted">
-                                    {{ $person->short_bio }}
+                                    {!! $person->short_bio !!}
                                 </p>
                             @endif
 

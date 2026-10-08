@@ -31,7 +31,6 @@
             type="text"
             value="{{ old('title', $post?->title ?? '') }}"
             autofocus
-            required
             class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text outline-none placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary"
         >
 
@@ -74,13 +73,14 @@
             Content
         </label>
 
-        <textarea
-            id="content"
+        <x-quill-editor
             name="content"
-            rows="16"
-            required
-            class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-7 text-text outline-none placeholder:text-text-muted focus:border-primary focus:ring-1 focus:ring-primary"
-        >{{ old('content', $post?->content ?? '') }}</textarea>
+            :value="$post->content ?? ''"
+            toolbar="basic"
+            placeholder="Content here..."
+            height="300px"
+            class="mt-2"
+        />
 
         @error('content')
             <p class="mt-2 text-sm text-error">
@@ -101,7 +101,6 @@
         <select
             id="category"
             name="category"
-            required
             class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-text outline-none focus:border-primary focus:ring-1 focus:ring-primary"
         >
             <option value="">Select category</option>

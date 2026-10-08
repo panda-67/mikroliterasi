@@ -19,7 +19,7 @@
                 ? old('name', $researchArea?->name ?? '')
                 : ($researchArea?->name ?? '') }}"
             autofocus
-            class="mt-2 block w-full border border-border bg-background px-3 py-2.5 text-sm text-text outline-none transition focus:border-text"
+            class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-text outline-none transition focus:border-text"
         >
 
         @if ($isActiveModal)
@@ -44,7 +44,7 @@
             id="{{ $descriptionInputId }}"
             name="description"
             rows="4"
-            class="mt-2 block w-full resize-y border border-border bg-background px-3 py-2.5 text-sm leading-6 text-text outline-none transition focus:border-text"
+            class="mt-2 block w-full rounded-md resize-y border border-border bg-background px-3 py-2.5 text-sm leading-6 text-text outline-none transition focus:border-text"
         >{{ $isActiveModal
             ? old('description', $researchArea?->description ?? '')
             : ($researchArea?->description ?? '') }}</textarea>

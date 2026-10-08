@@ -119,12 +119,14 @@
                     Short bio
                 </label>
 
-                <textarea
+                <x-quill-editor
                     name="short_bio"
-                    id="short_bio"
-                    rows="4"
-                    class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >{{ old('short_bio', $person->short_bio ?? '') }}</textarea>
+                    :value="$person->short_bio ?? ''"
+                    toolbar="basic"
+                    placeholder="Short bio here..."
+                    height="140px"
+                    class="mt-2"
+                />
 
                 @error('short_bio')
                     <p class="mt-1 text-sm text-error">
@@ -142,12 +144,14 @@
                     Biography
                 </label>
 
-                <textarea
+                <x-quill-editor
                     name="bio"
-                    id="bio"
-                    rows="8"
-                    class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >{{ old('bio', $person->bio ?? '') }}</textarea>
+                    :value="$person->bio ?? ''"
+                    toolbar="basic"
+                    placeholder="Biography here..."
+                    height="300px"
+                    class="mt-2"
+                />
 
                 @error('bio')
                     <p class="mt-1 text-sm text-error">
@@ -299,12 +303,14 @@
                     Education
                 </label>
 
-                <textarea
+                <x-quill-editor
                     name="education"
-                    id="education"
-                    rows="6"
-                    class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >{{ old('education', $person->education ?? '') }}</textarea>
+                    :value="$person->education ?? ''"
+                    toolbar="basic"
+                    placeholder="Education here..."
+                    height="300px"
+                    class="mt-2"
+                />
 
                 @error('education')
                     <p class="mt-1 text-sm text-error">
@@ -322,12 +328,14 @@
                     Research interests
                 </label>
 
-                <textarea
+                <x-quill-editor
                     name="research_interests"
-                    id="research_interests"
-                    rows="6"
-                    class="mt-2 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm leading-6 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                >{{ old('research_interests', $person->research_interests ?? '') }}</textarea>
+                    :value="$person->research_interests ?? ''"
+                    toolbar="basic"
+                    placeholder="Research interests here..."
+                    height="200px"
+                    class="mt-2"
+                />
 
                 @error('research_interests')
                     <p class="mt-1 text-sm text-error">
@@ -405,7 +413,7 @@
             href="{{ isset($person)
                 ? ($fromDashboard
                     ? route('dashboard.people.index')
-                    : route('people.show', $people->slug))
+                    : route('people.show', $person->slug))
                 : ($fromDashboard
                     ? route('dashboard.people.index')
                     : route('people.index')) }}"
