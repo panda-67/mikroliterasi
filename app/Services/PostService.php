@@ -4,12 +4,17 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Models\User;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostService
 {
+    public function __construct(
+        private HtmlSanitizer $htmlSanitizer
+    ) {}
+
     public function find(int $id): Post
     {
         return Post::findOrFail($id);
@@ -68,6 +73,11 @@ class PostService
         array $data,
         User $author
     ): Post {
+        $data['content'] = $this->htmlSanitizer->clean(
+            $data['content'] ?? null,
+            'rich_text'
+        );
+
         $file = $data['featured_image'] ?? null;
 
         unset($data['featured_image']);
@@ -98,6 +108,11 @@ class PostService
         Post $post,
         array $data
     ): Post {
+        $data['content'] = $this->htmlSanitizer->clean(
+            $data['content'] ?? null,
+            'rich_text'
+        );
+
         $file = $data['featured_image'] ?? null;
 
         unset($data['featured_image']);

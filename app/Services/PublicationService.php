@@ -3,10 +3,15 @@
 namespace App\Services;
 
 use App\Models\Publication;
+use App\Support\HtmlSanitizer;
 use Illuminate\Support\Str;
 
 class PublicationService
 {
+    public function __construct(
+        private HtmlSanitizer $htmlSanitizer
+    ) {}
+
     public function find(int $id): Publication
     {
         return Publication::findOrFail($id);
@@ -31,6 +36,11 @@ class PublicationService
 
     public function create(array $data): Publication
     {
+        $data['abstract'] = $this->htmlSanitizer->clean(
+            $data['abstract'] ?? null,
+            'rich_text'
+        );
+
         $data['slug'] = $this->generateUniqueSlug(
             $data['title']
         );
@@ -42,6 +52,11 @@ class PublicationService
         Publication $publication,
         array $data
     ): Publication {
+        $data['abstract'] = $this->htmlSanitizer->clean(
+            $data['abstract'] ?? null,
+            'rich_text'
+        );
+
         $publication->update($data);
 
         return $publication->fresh();

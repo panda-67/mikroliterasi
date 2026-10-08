@@ -3,11 +3,16 @@
 namespace App\Services;
 
 use App\Models\Person;
+use App\Support\HtmlSanitizer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class PersonService
 {
+    public function __construct(
+        private HtmlSanitizer $htmlSanitizer
+    ) {}
+
     public function find(int $id): Person
     {
         return Person::findOrFail($id);
@@ -35,6 +40,8 @@ class PersonService
 
     public function create(array $data): Person
     {
+        $data = $this->sanitizeInput($data);
+
         $data['slug'] = $this->generateUniqueSlug(
             $data['name']
         );
@@ -46,6 +53,8 @@ class PersonService
         Person $person,
         array $data
     ): Person {
+        $data = $this->sanitizeInput($data);
+
         $person->update($data);
 
         return $person->fresh();
@@ -54,6 +63,20 @@ class PersonService
     public function delete(Person $person): void
     {
         $person->delete();
+    }
+
+    private function sanitizeInput(array $data): array
+    {
+        return $this->htmlSanitizer->cleanMany(
+            $data,
+            [
+                'short_bio',
+                'bio',
+                'education',
+                'research_interests',
+            ],
+            'rich_text'
+        );
     }
 
     private function generateUniqueSlug(string $name): string

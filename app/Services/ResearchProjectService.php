@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ResearchProject;
+use App\Support\HtmlSanitizer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
@@ -10,6 +11,10 @@ use Illuminate\Support\Str;
 
 class ResearchProjectService
 {
+    public function __construct(
+        public HtmlSanitizer $htmlSanitizer
+    ) {}
+
     public function find(int $id): ?ResearchProject
     {
         return ResearchProject::find($id);
@@ -29,6 +34,8 @@ class ResearchProjectService
 
     public function create(array $data): ResearchProject
     {
+        $data = $this->sanitizeInput($data);
+
         $file = $data['featured_image'] ?? null;
 
         unset($data['featured_image']);
@@ -48,6 +55,8 @@ class ResearchProjectService
         ResearchProject $project,
         array $data
     ): ResearchProject {
+        $data = $this->sanitizeInput($data);
+
         $file = $data['featured_image'] ?? null;
 
         unset($data['featured_image']);
@@ -131,6 +140,18 @@ class ResearchProjectService
         array $publications
     ): void {
         $project->publications()->sync($publications);
+    }
+
+    private function sanitizeInput(array $data): array
+    {
+        return $this->htmlSanitizer->cleanMany(
+            $data,
+            [
+                'short_description',
+                'description',
+            ],
+            'rich_text'
+        );
     }
 
     private function generateUniqueSlug(string $title): string

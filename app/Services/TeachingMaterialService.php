@@ -3,11 +3,16 @@
 namespace App\Services;
 
 use App\Models\TeachingMaterial;
+use App\Support\HtmlSanitizer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 class TeachingMaterialService
 {
+    public function __construct(
+        private HtmlSanitizer $htmlSanitizer
+    ) {}
+
     public function getAll(int $perPage = 12): LengthAwarePaginator
     {
         return TeachingMaterial::query()
@@ -26,6 +31,11 @@ class TeachingMaterialService
 
     public function create(array $data): TeachingMaterial
     {
+        $data['description'] = $this->htmlSanitizer->clean(
+            $data['description'] ?? null,
+            'rich_text'
+        );
+
         $data['slug'] = $this->generateUniqueSlug($data['title']);
 
         return TeachingMaterial::create($data);
@@ -35,6 +45,11 @@ class TeachingMaterialService
         TeachingMaterial $teachingMaterial,
         array $data
     ): TeachingMaterial {
+        $data['description'] = $this->htmlSanitizer->clean(
+            $data['description'] ?? null,
+            'rich_text'
+        );
+
         $teachingMaterial->update($data);
 
         return $teachingMaterial->refresh();
