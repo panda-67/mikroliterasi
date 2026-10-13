@@ -173,7 +173,7 @@
                         <a
                             href="{{ route('dashboard.teaching-materials.index') }}"
                             class="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium
-                                {{ request()->routeIs('dashboard.teaching-matereials.*')
+                                {{ request()->routeIs('dashboard.teaching-materials.*')
                                     ? 'bg-card text-text'
                                     : 'text-text-muted hover:bg-card hover:text-text' }}"
                         >

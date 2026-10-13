@@ -24,6 +24,34 @@
 
     @include('components.navbar')
 
+    @auth
+        <div class="border-b border-border bg-background">
+            <div class="mx-auto flex min-h-10 w-full max-w-300
+                        items-center justify-between gap-3 px-4
+                        sm:px-6 lg:px-8">
+
+                <div class="flex min-w-0 items-center gap-2 text-xs">
+                    <span class="shrink-0 font-medium text-text">
+                        {{ auth()->user()->name }}
+                    </span>
+
+                    <span class="text-text-muted">/</span>
+
+                    <span class="truncate text-text-muted">
+                        {{ auth()->user()->email }}
+                    </span>
+                </div>
+
+                <div class="flex shrink-0 items-center gap-3">
+                    <span class="hidden text-xs text-text-muted sm:inline">
+                        {{ ucfirst(auth()->user()->role->value ?? auth()->user()->role) }}
+                    </span>
+               </div>
+
+            </div>
+        </div>
+    @endauth
+
     <main class="flex-1">
 
         <x-flash-message />
