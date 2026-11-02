@@ -10,13 +10,10 @@ use App\Http\Controllers\ResearchProjectController;
 use App\Http\Controllers\TeachingMaterialController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
-
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
+Route::view('/', 'home')->name('home');
+Route::view('/about', 'about')->name('about');
+Route::view('/privacy-policy', 'legal.privacy-policy')->name('privacy-policy');
+Route::view('/terms-of-service', 'legal.terms-of-service')->name('terms-of-service');
 
 Route::controller(PostController::class)->name('posts.')
     ->group(function () {

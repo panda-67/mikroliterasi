@@ -13,6 +13,18 @@
 
         </div>
 
+        <nav class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-text-muted">
+            <a href="{{ route('privacy-policy') }}"
+               class="transition-colors hover:text-text">
+                Privacy Policy
+            </a>
+
+            <a href="{{ route('terms-of-service') }}"
+               class="transition-colors hover:text-text">
+                Terms of Service
+            </a>
+        </nav>
+
         <div class="border-t border-border pt-4">
             <p class="text-xs text-text-subtle">
                 &copy; {{ date('Y') }} Mikroliterasi. All rights reserved.
