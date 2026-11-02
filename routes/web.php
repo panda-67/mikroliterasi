@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\PostController;
@@ -17,63 +18,10 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-Route::get('/dashboard', DashboardController::class)
-    ->name('dashboard.index');
-
-Route::resource('dashboard/research-areas', ResearchAreaController::class)
-    ->except('create', 'show', 'edit')
-    ->names('dashboard.research-areas');
-
-Route::get('/dashboard/research-projects', [
-    ResearchProjectController::class,
-    'dashboardIndex',
-])->name('dashboard.research-projects.index');
-
-Route::get('/dashboard/publications', [
-    PublicationController::class,
-    'dashboardIndex'
-])->name('dashboard.publications.index');
-
-Route::get('/dashboard/people', [
-    PersonController::class,
-    'dashboardIndex'
-])->name('dashboard.people.index');
-
-Route::prefix('dashboard')
-    ->name('dashboard.')
+Route::controller(PostController::class)->name('posts.')
     ->group(function () {
-        Route::get('/posts', [PostController::class, 'dashboardIndex'])
-            ->name('posts.index');
-
-        Route::resource('posts', PostController::class)
-            ->except(['index', 'show']);
-    });
-
-Route::controller(PostController::class)
-    ->name('posts.')
-    ->group(function () {
-        Route::get('/posts', 'index')
-            ->name('index');
-
-        Route::get('/posts/{post}', 'show')
-            ->name('show');
-    });
-
-Route::prefix('dashboard')
-    ->name('dashboard.')
-    ->group(function () {
-        Route::get('/teaching-materials', [TeachingMaterialController::class, 'dashboardIndex',])
-            ->name('teaching-materials.index');
-
-        Route::resource('teaching-materials', TeachingMaterialController::class)
-            ->except(['index', 'show']);
-    });
-
-Route::controller(TeachingMaterialController::class)
-    ->name('teaching-materials.')
-    ->group(function () {
-        Route::get('/materi-ajar', 'index')->name('index');
-        Route::get('/materi-ajar/{teachingMaterial}', 'show')->name('show');
+        Route::get('/posts', 'index')->name('index');
+        Route::get('/posts/{post}', 'show')->name('show');
     });
 
 Route::resource('research-projects', ResearchProjectController::class);
@@ -85,3 +33,56 @@ Route::delete(
 
 Route::resource('publications', PublicationController::class);
 Route::resource('people', PersonController::class);
+
+Route::controller(TeachingMaterialController::class)
+    ->name('teaching-materials.')
+    ->group(function () {
+        Route::get('/materi-ajar', 'index')->name('index');
+        Route::get('/materi-ajar/{teachingMaterial}', 'show')->name('show');
+    });
+
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+
+    Route::get('/', DashboardController::class)->name('index');
+
+    Route::get('/posts', [
+        PostController::class,
+        'dashboardIndex'
+    ])->name('posts.index');
+
+    Route::get('research-projects', [
+        ResearchProjectController::class,
+        'dashboardIndex',
+    ])->name('research-projects.index');
+
+    Route::get('publications', [
+        PublicationController::class,
+        'dashboardIndex'
+    ])->name('publications.index');
+
+    Route::get('people', [
+        PersonController::class,
+        'dashboardIndex'
+    ])->name('people.index');
+
+    Route::get('/teaching-materials', [
+        TeachingMaterialController::class,
+        'dashboardIndex',
+    ])->name('teaching-materials.index');
+
+    Route::resource('research-areas', ResearchAreaController::class)
+        ->except('create', 'show', 'edit')
+        ->names('research-areas');
+
+    Route::resource('posts', PostController::class)
+        ->except(['index', 'show']);
+
+    Route::resource('teaching-materials', TeachingMaterialController::class)
+        ->except(['index', 'show']);
+});
+
+Route::prefix('auth/google')->name('google.')->controller(GoogleAuthController::class)
+    ->group(function () {
+        Route::get('/', 'redirect')->name('redirect');
+        Route::get('/callback', 'callback')->name('callback');
+    });

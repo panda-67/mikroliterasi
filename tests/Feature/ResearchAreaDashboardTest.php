@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Dashboard;
+namespace Tests\Feature;
 
 use App\Models\ResearchArea;
 use App\Models\ResearchProject;
